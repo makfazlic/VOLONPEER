@@ -22,7 +22,7 @@ export default function Jumbotron() {
               <button class="bg-blueish5 hover:bg-blueish7 py-4 px-8  rounded xl:rounded-xl text-lg xl:text-2xl font-bold text-white ml-2 xl:ml-5">Browse</button>
             </div>
       
-            <div className="xl:w-2/5 px-3 mx-auto">
+            <div className="md:w-1/2 xl:w-2/5 px-3 mx-auto">
               <div class="aspect-w-16 aspect-h-9">
                 <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               </div>
