@@ -22,11 +22,26 @@ module.exports = {
 
         extend: {
             colors: {
-                blueish1: "#8ECAE6",
-                blueish2: "#219EBC",
-                blueish3: "#023047",
-                yellowish: "#FFB703",
-                orangeish: "#FB8500"
+                blueish1: "#a9d6e5",
+                blueish2: "#89c2d9",
+                blueish3: "#61a5c2",
+                blueish4: "#468faf",
+                blueish5: "#2c7da0",
+                blueish6: "#2a6f97",
+                blueish7: "#014f86",
+                blueish8: "#01497c",
+                blueish9: "#013a63",
+                blueish10: "#012a4a",
+
+                greenish1: "#d8f3dc",
+                greenish2: "#b7e4c7",
+                greenish3: "#95d5b2",
+                greenish4: "#74c69d",
+                greenish5: "#52b788",
+                greenish6: "#40916c",
+                greenish7: "#2d6a4f",
+                greenish8: "#1b4332",
+                greenish9: "#081c15",
             },
             fontFamily:{
                 inter: "'Inter', sans-serif",

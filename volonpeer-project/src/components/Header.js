@@ -4,7 +4,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
+  { name: 'Home', href: '#', current: true },
   { name: 'Team', href: '#', current: false },
   { name: 'Projects', href: '#', current: false },
   { name: 'Calendar', href: '#', current: false },
@@ -16,7 +16,7 @@ function classNames(...classes) {
 
 export default function Example() {
   return (
-    <Disclosure as="nav" className="bg-blueish3">
+    <Disclosure as="nav" className="bg-blueish10 sticky top-0 z-10">
       {({ open }) => (
         <>
           <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -52,7 +52,7 @@ export default function Example() {
                         key={item.name}
                         href={item.href}
                         className={classNames(
-                          item.current ? 'bg-orangeish text-white' : 'text-gray-300 hover:bg-blueish2 hover:text-white',
+                          item.current ? 'bg-greenish5 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                           'px-3 py-2 rounded-md text-sm font-medium'
                         )}
                         aria-current={item.current ? 'page' : undefined}
@@ -64,10 +64,10 @@ export default function Example() {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <button class="block px-4 py-2 text-sm  bg-blueish2 hover:bg-blueish1 font-bold rounded mr-4 text-white">+ Post</button> 
+              <button class="block px-4 py-2 text-sm  bg-blueish5 hover:bg-blueish6 font-bold rounded mr-4 text-white xl:block hidden">+ Post</button> 
                 <button
                   type="button"
-                  className="bg-blueish3 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                  className="bg-blueish10 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                 >
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -140,7 +140,8 @@ export default function Example() {
                   as="a"
                   href={item.href}
                   className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+
+                    item.current ? 'bg-greenish5 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'block px-3 py-2 rounded-md text-base font-medium'
                   )}
                   aria-current={item.current ? 'page' : undefined}
@@ -148,6 +149,8 @@ export default function Example() {
                   {item.name}
                 </Disclosure.Button>
               ))}
+              <a class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">+ Post</a> 
+
             </div>
           </Disclosure.Panel>
         </>
