@@ -27,7 +27,7 @@ export default function Jumbotron() {
                 <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               </div>
             </div>
-            <p className="text-xl mx-3 xl:text-3xl mt-10 xl:mt-20">Only online platoform that lets you ask for help when you need it.  </p>
+            <p className="text-xl mx-3 xl:text-3xl mt-10 xl:mt-20">Seek help from your beloved community, or help you fellow citizens in need.  </p>
             <p className="text-xl xl:text-2xl mt-10 xl:mt-20">Scroll down      <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
