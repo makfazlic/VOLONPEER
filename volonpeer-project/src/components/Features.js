@@ -29,7 +29,7 @@ const features = [
 
 export default function Features() {
   return (
-    <div className="pb-12 mt-20 bg-white container mx-auto">
+    <div className="pb-12 mt-20 bg-white container mx-auto" id="features">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="lg:text-center">
           <h2 className="text-base text-blueish6 font-semibold tracking-wide uppercase">Key Features</h2>

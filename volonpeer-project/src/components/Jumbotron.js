@@ -1,4 +1,6 @@
+import { animateScroll as scroll, Link } from 'react-scroll'
 import bg1 from '../images/bg1.jpg';
+import '../css/Jumbotron.css';
 
 export default function Jumbotron() {
     return (
@@ -28,10 +30,18 @@ export default function Jumbotron() {
               </div>
             </div>
             <p className="text-xl mx-3 xl:text-3xl mt-10 xl:mt-20">Seek help from your beloved community, or help you fellow citizens in need.  </p>
-            <p className="text-xl xl:text-2xl mt-10 xl:mt-20">Scroll down      <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <Link className="hover:text-greenish5  cursor-pointer"
+                  to="features"
+                  smooth={true}
+                  offset={-100}
+                  duration={1000}
+                  isDynamic={true}
+            >
+            <p className="text-xl xl:text-2xl mt-10 xl:mt-20 animate-bounce">Scroll down      <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
             </p>
+            </Link>
       
           </div>
       

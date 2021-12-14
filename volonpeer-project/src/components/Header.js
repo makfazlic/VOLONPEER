@@ -4,18 +4,20 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import logo1 from '../images/logo1.png'
 
-const navigation = [
-  { name: 'Home', href: '/', current: true },
-  { name: 'Login', href: '/login', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-]
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export default function Header(props) {
+  const navigation = [
+    { name: 'Home', href: '/', current: props.location == "home" },
+    { name: 'Posts', href: '/posts', current: props.location == "posts" },
+    { name: 'Leaderboard', href: '/leaderboard', current: props.location == "leaderboard" },
+    { name: 'Privacy', href: '/privacy-policy', current: props.location == "privacy-policy" },
+  ]
+  
   return (
     <Disclosure as="nav" className="bg-white sticky top-0 z-10">
       {({ open }) => (
