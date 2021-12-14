@@ -5,6 +5,8 @@ import Features from './components/Features';
 import Footer from './components/Footer';
 import Stats from './components/Stats'
 import Parallax from './components/Parallax';
+import CallToAction from './components/CallToAction';
+
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
@@ -29,6 +31,7 @@ function App() {
             - Another call to action
             */}
             <Parallax />
+            <CallToAction />
             <Footer />
           </div>
         </Route>
