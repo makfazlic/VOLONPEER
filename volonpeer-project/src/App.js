@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import Stats from './components/Stats'
 import Parallax from './components/Parallax';
 import CallToAction from './components/CallToAction';
+import Contanct from './components/Contact';
 
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -26,12 +27,9 @@ function App() {
             <Jumbotron />
             <Features />
             <Stats />
-            {/*
-            - Contact form
-            - Another call to action
-            */}
             <Parallax />
             <CallToAction />
+            <Contanct />
             <Footer />
           </div>
         </Route>

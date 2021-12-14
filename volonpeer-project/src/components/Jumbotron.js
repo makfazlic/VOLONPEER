@@ -18,8 +18,8 @@ export default function Jumbotron() {
             <div className="flex justify-center items-center mb-10 xl:mb-20">
       
       
-              <button class="bg-greenish5 hover:bg-greenish7 py-4 px-5 rounded xl:rounded-xl text-lg xl:text-2xl font-bold text-white mr-2 xl:mr-5">Ask for help!</button>
-              <button class="bg-blueish5 hover:bg-blueish7 py-4 px-8  rounded xl:rounded-xl text-lg xl:text-2xl font-bold text-white ml-2 xl:ml-5">Browse</button>
+              <button class="bg-greenish5 hover:bg-greenish7 py-4 px-5 rounded xl:rounded-xl text-lg xl:text-2xl font-semibold text-white mr-2 xl:mr-5">Ask for help!</button>
+              <button class="bg-blueish5 hover:bg-blueish7 py-4 px-8  rounded xl:rounded-xl text-lg xl:text-2xl font-semibold text-white ml-2 xl:ml-5">Browse</button>
             </div>
       
             <div className="md:w-1/2 xl:w-2/5 px-3 mx-auto">
