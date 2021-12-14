@@ -25,7 +25,6 @@ function App() {
             <Features />
             <Stats />
             {/*
-            - A section with paralax scroll (or a background image)
             - Contact form
             - Another call to action
             */}
