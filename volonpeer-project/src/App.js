@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Jumbotron from './components/Jumbotron';
 import Features from './components/Features';
 import Footer from './components/Footer';
+import Stats from './components/Stats'
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
@@ -21,6 +22,7 @@ function App() {
             <Header/>
             <Jumbotron />
             <Features />
+            <Stats />
             <Footer />
           </div>
         </Route>
