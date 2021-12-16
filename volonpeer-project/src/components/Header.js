@@ -3,6 +3,7 @@ import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import logo1 from '../images/logo1.png'
+import { logout } from '../firebase'
 
 
 
@@ -17,7 +18,7 @@ export default function Header(props) {
     { name: 'Leaderboard', href: '/leaderboard', current: props.location == "leaderboard" },
     { name: 'Privacy', href: '/privacy-policy', current: props.location == "privacy-policy" },
   ]
-  
+
   return (
     <Disclosure as="nav" className="bg-white sticky top-0 z-10">
       {({ open }) => (
@@ -63,11 +64,22 @@ export default function Header(props) {
                         {item.name}
                       </a>
                     ))}
+                    {props.user ? 
+                      <a
+                        href="/dashboard"
+                        className={classNames(
+                          props.location=="dashboard" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-greenish5 hover:text-greenish7',
+                          'px-3 py-2 rounded-md text-sm font-medium'
+                        )}
+                        aria-current={props.location=="dashboard" ? 'page' : undefined}
+                      >
+                        Dashboard
+                      </a> : <></>}
                   </div>
                 </div>
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <button class="block px-4 py-2 text-sm  bg-blueish5 hover:bg-blueish6 font-bold rounded mr-4 text-white xl:block hidden">+ Post</button> 
+              {props.user ? (<div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                <button className="block px-4 py-2 text-sm  bg-blueish5 hover:bg-blueish6 font-bold rounded mr-4 text-white xl:block hidden">+ Post</button>
                 <button
                   type="button"
                   className="bg-white p-1 rounded-full text-gray-400 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
@@ -121,7 +133,7 @@ export default function Header(props) {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
+                            onClick={logout}
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
                             Sign out
@@ -131,10 +143,15 @@ export default function Header(props) {
                     </Menu.Items>
                   </Transition>
                 </Menu>
-              </div>
+              </div>)
+                : <>
+                  <a className="block px-4 py-2 text-sm  bg-white hover:bg-gray-100 font-bold rounded mr-2 text-blueish5 border-blueish6 border-2 xl:block hidden" href="/login" aria-current={props.location == "login" ? 'page' : undefined}>Login</a>
+                  <a className="block px-4 py-2 text-sm  bg-blueish5 hover:bg-blueish6 font-bold rounded text-white xl:block hidden" href="/login" aria-current={props.location == "login" ? 'page' : undefined}>Register</a>
+                </>
+              }
+
             </div>
           </div>
-
           <Disclosure.Panel className="sm:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navigation.map((item) => (
@@ -144,7 +161,7 @@ export default function Header(props) {
                   href={item.href}
                   className={classNames(
 
-                    item.current ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                    item.current ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-gray-400 hover:bg-gray-700 hover:text-white',
                     'block px-3 py-2 rounded-md text-base font-medium'
                   )}
                   aria-current={item.current ? 'page' : undefined}
@@ -152,7 +169,43 @@ export default function Header(props) {
                   {item.name}
                 </Disclosure.Button>
               ))}
-              <a class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">+ Post</a> 
+              {props.user ? (
+                <>
+              <a href="/dashboard" aria-current={props.location == "dashboard" ? 'page' : undefined}
+                                className={classNames(
+
+                                  props.location=="dashboard" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-gray-400 hover:bg-gray-700 hover:text-white',
+                                  'block px-3 py-2 rounded-md text-base font-medium'
+                                )}
+              >Dashboard</a>
+              <a href="/newpost" aria-current={props.location == "newpost" ? 'page' : undefined}
+                                className={classNames(
+
+                                  props.location=="newpost" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-white hover:bg-gray-700 hover:text-white',
+                                  'block px-3 py-2 rounded-md text-base font-medium bg-blueish5 hover:bg-blueish6'
+                                )}
+              >+ Post</a>
+
+              </>
+              ) :
+                <>
+                  <a  href="/login" aria-current={props.location == "login" ? 'page' : undefined}
+                                                  className={classNames(
+
+                                                    props.location=="login" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-gray-400 hover:bg-gray-700 hover:text-white',
+                                                    'block px-3 py-2 rounded-md text-base font-medium'
+                                                  )}
+                  >Login</a>
+                  <a href="/register" aria-current={props.location == "register" ? 'page' : undefined}
+                                                  className={classNames(
+
+                                                    props.location=="register" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-gray-400 hover:bg-gray-700 hover:text-white',
+                                                    'block px-3 py-2 rounded-md text-base font-medium'
+                                                  )}
+                  >Register</a>
+                </>
+              }
+
 
             </div>
           </Disclosure.Panel>

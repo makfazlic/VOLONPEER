@@ -1,21 +1,33 @@
 import React, { useRef, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import { LockClosedIcon } from '@heroicons/react/solid'
 import Swal from 'sweetalert2';
 import logo2 from '../images/logo2.png'
-import { useAuth } from '../contexts/AuthContext'
+import { register_base, useAuth } from '../firebase'
 
 
 export default function Login() {
     const emailRef = useRef()
     const passwordRef = useRef()
     const passwordConfirmRef = useRef()
-    const { register } = useAuth()
     const [error, setError] = useState('')
-    const[loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const currentUser = useAuth()
 
     async function handleSubmit(e) {
         e.preventDefault()
+        setLoading(true)
+            
 
+        if (passwordRef.current.value.length < 6) {
+            setError('Passwords do not match')
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Password must be at least 6 characters long',
+            })
+            return error
+        }
         if (passwordRef.current.value !== passwordConfirmRef.current.value) {
             setError('Passwords do not match')
             Swal.fire({
@@ -26,10 +38,11 @@ export default function Login() {
             return error;
         }
 
+
+
         try {
             setError('')
-            setLoading(true)
-            await register(emailRef.current.value, passwordRef.current.value)
+            register_base(emailRef.current.value, passwordRef.current.value)
         } catch (error) {
             setError("Failed to create an account")
             Swal.fire({
@@ -43,10 +56,11 @@ export default function Login() {
 
     }
     return (
-
+        (currentUser) ? <Redirect to="/" /> :
         <div className="min-h-full flex items-center justify-center py-10 pt-12 xl:pt-0 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
                 <div>
+                    Now: { currentUser && currentUser.email }
                     <img
                         className="mx-auto h-12 w-auto"
                         src={logo2}
@@ -98,7 +112,7 @@ export default function Login() {
                                 ref={passwordConfirmRef}
                                 id="cpassword"
                                 name="cpassword"
-                                type="cpassword"
+                                type="password"
                                 required
                                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md rounded-t-md focus:outline-none focus:ring-greenish5 focus:border-greenish5 focus:z-10 sm:text-sm"
                                 placeholder="Confirm password"
@@ -129,7 +143,7 @@ export default function Login() {
 
                     <div>
                         <button
-                            disabled={loading}
+                            disabled={loading || currentUser}
                             type="submit"
                             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-greenish6 hover:bg-greenish7 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-greenish5"
                         >

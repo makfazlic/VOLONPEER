@@ -1,6 +1,6 @@
 import './css/App.css';
 
-import { AuthProvider } from './contexts/AuthContext';
+import { useAuth } from './firebase'
 
 
 import Header from './components/Header';
@@ -35,41 +35,15 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 function App() {
 
+  const currentUser = useAuth()
+
   return (
-    <AuthProvider >
     <Router>
       <Switch>
 
-        <Route path="/privacy-policy">
-          <Header location="privacy-policy" />
-        </Route>
-
-        <Route path="/leaderboard">
-          <Header location="leaderboard" />
-        </Route>
-
-        <Route path="/posts">
-          <Header location="posts" />
-        </Route>
-
-        <Route path="/register">
-        <div class="flex flex-col h-screen justify-evenly">
-            <Header location="register" />
-            <Register />
-            <Footer />
-          </div>        </Route>
-
-        <Route path="/login">
-        <div class="flex flex-col h-screen justify-evenly">
-            <Header location="login" />
-            <Login />
-            <Footer />
-          </div>
-        </Route>
-
-        <Route path="/">
+        <Route exact path="/">
           <div>
-            <Header location="home" />
+            <Header location="home" user={currentUser}/>
             <Jumbotron />
             <Features />
             <Stats />
@@ -79,9 +53,50 @@ function App() {
             <Footer />
           </div>
         </Route>
+
+        <Route path="/privacy-policy">
+          <Header location="privacy-policy" user={currentUser}/>
+          privacy policy
+        </Route>
+
+        <Route path="/leaderboard">
+          <Header location="leaderboard" user={currentUser}/>
+          leaderboard
+        </Route>
+
+        <Route path="/posts">
+          <Header location="posts" user={currentUser}/>
+          all posts
+        </Route>
+
+        <Route path="/dashboard">
+          <Header location="dashboard" user={currentUser}/>
+          Dashboard of user: {currentUser && currentUser.email}
+        </Route>
+
+        <Route path="/newpost">
+          <Header location="newpost" user={currentUser}/>
+          newpost
+        </Route>
+
+        <Route path="/register">
+          <div className="flex flex-col h-screen justify-evenly">
+            <Header location="register" user={currentUser}/>
+            <Register />
+            <Footer />
+          </div>
+        </Route>
+
+        <Route path="/login">
+          <div className="flex flex-col h-screen justify-evenly">
+            <Header location="login" user={currentUser}/>
+            <Login />
+            <Footer />
+          </div>
+        </Route>
+
       </Switch>
     </Router>
-    </AuthProvider>
 
   );
 }
