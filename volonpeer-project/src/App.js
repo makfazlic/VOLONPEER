@@ -13,6 +13,7 @@ import CallToAction from './components/CallToAction';
 import Contanct from './components/Contact';
 import Login from './components/Login';
 import Register from './components/Register';
+import Profile from './components/Profile';
 
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -77,6 +78,11 @@ function App() {
         <Route path="/newpost">
           <Header location="newpost" user={currentUser}/>
           newpost
+        </Route>
+
+        <Route path="/profile">
+          <Header user={currentUser}/>
+          <Profile />
         </Route>
 
         <Route path="/register">
