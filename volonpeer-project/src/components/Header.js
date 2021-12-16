@@ -116,16 +116,6 @@ export default function Header(props) {
                             href="#"
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
-                            Your Profile
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
                             Settings
                           </a>
                         )}
@@ -133,6 +123,7 @@ export default function Header(props) {
                       <Menu.Item>
                         {({ active }) => (
                           <a
+                          href='/login'
                             onClick={logout}
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
@@ -146,7 +137,7 @@ export default function Header(props) {
               </div>)
                 : <>
                   <a className="block px-4 py-2 text-sm  bg-white hover:bg-gray-100 font-bold rounded mr-2 text-blueish5 border-blueish6 border-2 xl:block hidden" href="/login" aria-current={props.location == "login" ? 'page' : undefined}>Login</a>
-                  <a className="block px-4 py-2 text-sm  bg-blueish5 hover:bg-blueish6 font-bold rounded text-white xl:block hidden" href="/login" aria-current={props.location == "login" ? 'page' : undefined}>Register</a>
+                  <a className="block px-4 py-2 text-sm  bg-blueish5 hover:bg-blueish6 font-bold rounded text-white xl:block hidden" href="/register" aria-current={props.location == "register" ? 'page' : undefined}>Register</a>
                 </>
               }
 

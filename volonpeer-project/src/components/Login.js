@@ -3,7 +3,9 @@ import { Redirect } from 'react-router-dom';
 import { LockClosedIcon } from '@heroicons/react/solid'
 import Swal from 'sweetalert2';
 import logo2 from '../images/logo2.png'
-import { login_base, useAuth } from '../firebase'
+import { login_base, login_google, useAuth } from '../firebase'
+import google1 from '../images/google1.png'
+import google2 from '../images/google2.png'
 
 export default function Login() {
   const emailRef = useRef()
@@ -43,13 +45,28 @@ export default function Login() {
 
 }
 
+
+async function handleGoogleLogin() {
+    setLoading(true)
+    try {
+        await console.log(login_google())
+    } catch (error) {
+        setError("Failed to create an account")
+          Swal.fire({ 
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Failed to create an account',
+        })
+    }
+    setLoading(false)
+}
+
   return (
 
     currentUser ? <Redirect to="/dashboard" /> :
     <div className="min-h-full flex items-center justify-center py-10 pt-12 xl:pt-0 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-        Now: { currentUser && currentUser.email }
 
           <img
             className="mx-auto h-12 w-auto"
@@ -97,17 +114,8 @@ export default function Login() {
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-greenish6 focus:ring-greenish5 border-gray-300 rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
-            </div>
+          <img src={google1} alt="google" className="h-10" onClick={handleGoogleLogin} />
+
 
             <div className="text-sm">
               <a href="#" className="font-medium text-greenish6 hover:text-greenish5">

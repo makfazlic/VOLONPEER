@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -17,6 +17,11 @@ export const auth = getAuth(app);
 
 export function register_base(email, password) {
     return createUserWithEmailAndPassword(auth, email, password);
+}
+
+export function login_google() {
+    const provider = new GoogleAuthProvider();
+    return signInWithPopup(auth, provider);
 }
 
 export function login_base(email, password) {

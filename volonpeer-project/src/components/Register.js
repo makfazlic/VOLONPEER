@@ -3,7 +3,9 @@ import { Redirect } from 'react-router-dom';
 import { LockClosedIcon } from '@heroicons/react/solid'
 import Swal from 'sweetalert2';
 import logo2 from '../images/logo2.png'
-import { register_base, useAuth } from '../firebase'
+import { register_base, useAuth, login_google } from '../firebase'
+import google1 from '../images/google1.png'
+import google2 from '../images/google2.png'
 
 
 export default function Login() {
@@ -55,12 +57,29 @@ export default function Login() {
         setLoading(false)
 
     }
+
+
+async function handleGoogleLogin() {
+    setLoading(true)
+    try {
+        await console.log(login_google())
+    } catch (error) {
+        setError("Failed to create an account")
+          Swal.fire({ 
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Failed to create an account',
+        })
+    }
+    setLoading(false)
+}
+
+
     return (
         (currentUser) ? <Redirect to="/" /> :
         <div className="min-h-full flex items-center justify-center py-10 pt-12 xl:pt-0 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
                 <div>
-                    Now: { currentUser && currentUser.email }
                     <img
                         className="mx-auto h-12 w-auto"
                         src={logo2}
@@ -74,6 +93,21 @@ export default function Login() {
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <input type="hidden" name="remember" defaultValue="true" />
                     <div className="rounded-md shadow-sm -space-y-px">
+                    <div>
+                            <label htmlFor="email-address" className="sr-only">
+                                Username
+                            </label>
+                            <input
+                                ref={emailRef}
+                                id="email-address"
+                                name="email"
+                                type="email"
+                                autoComplete="email"
+                                required
+                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md rounded-t-md  focus:outline-none focus:ring-greenish5 focus:border-greenish5 focus:z-10 sm:text-sm mb-5"
+                                placeholder="Email address"
+                            />
+                        </div>
                         <div>
                             <label htmlFor="email-address" className="sr-only">
                                 Email address
@@ -121,17 +155,8 @@ export default function Login() {
                     </div>
 
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                            <input
-                                id="remember-me"
-                                name="remember-me"
-                                type="checkbox"
-                                className="h-4 w-4 text-greenish6 focus:ring-greenish5 border-gray-300 rounded"
-                            />
-                            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                                Sign up for newsletter
-                            </label>
-                        </div>
+                    <img src={google1} alt="google" className="h-10" onClick={handleGoogleLogin} />
+
 
                         <div className="text-sm">
                             Already have an account?
