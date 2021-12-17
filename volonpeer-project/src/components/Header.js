@@ -79,7 +79,7 @@ export default function Header(props) {
                 </div>
               </div>
               {props.user ? (<div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <button className="block px-4 py-2 text-sm  bg-blueish5 hover:bg-blueish6 font-bold rounded mr-4 text-white xl:block hidden">+ Post</button>
+                <a className="block px-4 py-2 text-sm  bg-blueish5 hover:bg-blueish6 font-bold rounded mr-4 text-white xl:block hidden" href="/newpost">+ Post</a>
                 <button
                   type="button"
                   className="bg-white p-1 rounded-full text-gray-400 hover:text-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
@@ -116,7 +116,7 @@ export default function Header(props) {
                             href="/profile"
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
-                            Settings
+                            Account
                           </a>
                         )}
                       </Menu.Item>

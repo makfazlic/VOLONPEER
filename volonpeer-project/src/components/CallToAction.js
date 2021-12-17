@@ -9,7 +9,7 @@ export default function Example() {
           <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
             <div className="inline-flex rounded-md shadow">
               <a
-                href="#"
+                href="/register"
                 className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-greenish6 hover:bg-greenish7"
               >
                 Sign up
@@ -17,7 +17,7 @@ export default function Example() {
             </div>
             <div className="ml-3 inline-flex rounded-md shadow">
               <a
-                href="#"
+                href="/login"
                 className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-greenish6 bg-white hover:bg-gray-50"
               >
                 Log in

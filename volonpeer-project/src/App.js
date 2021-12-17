@@ -14,6 +14,9 @@ import Contanct from './components/Contact';
 import Login from './components/Login';
 import Register from './components/Register';
 import Profile from './components/Profile';
+import NewPosts from './components/NewPosts';
+import Posts from './components/Posts';
+
 
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -35,6 +38,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 
 function App() {
+
+  
 
   const currentUser = useAuth()
 
@@ -67,7 +72,10 @@ function App() {
 
         <Route path="/posts">
           <Header location="posts" user={currentUser}/>
-          all posts
+          
+            <Posts />
+                
+          
         </Route>
 
         <Route path="/dashboard">
@@ -77,12 +85,14 @@ function App() {
 
         <Route path="/newpost">
           <Header location="newpost" user={currentUser}/>
-          newpost
+          <NewPosts />
+          <Footer />
         </Route>
 
         <Route path="/profile">
           <Header user={currentUser}/>
           <Profile />
+          <Footer />
         </Route>
 
         <Route path="/register">
