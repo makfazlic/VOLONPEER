@@ -32,7 +32,7 @@ export default function Posts() {
                                 <h2 className="card-title">{item.title}</h2>
                                 <p>{item.about}</p>
                                 <div className="card-actions">
-                                    <button className="btn btn-primary">Contanct</button>
+                                    <button className="btn btn-primary bg-blueish5 hover:bg-blueish6">Contanct</button>
                                     <button className="btn btn-ghost">More info</button>
                                 </div>
                             </div>
