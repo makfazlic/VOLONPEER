@@ -7,7 +7,7 @@ import { UserAddIcon } from "@heroicons/react/outline";
 export default function Posts() {
     const [postArray, setPostArray] = useState([])
     const [loading, setLoading] = useState(true)
-    const [image, setImage] = useState('')
+    const [loaded, setLoaded] = useState(true)
 
 
     useEffect(() => {
@@ -35,9 +35,15 @@ export default function Posts() {
 
                 getDownloadURL(starsRef)
                     .then((url) => {
-                        // Insert url into an <img> tag to "download"
-                        newitems[i][2] = url
-                        setPostArray(postArray.concat(newitems))
+                        console.log(loaded)
+                        if (loaded) {
+                            // Insert url into an <img> tag to "download"
+                            newitems[i][2] = url
+                            console.log(newitems[i][2])
+
+                            setPostArray(postArray.concat(newitems))
+                            setLoaded(false)
+                        }
                     })
                     .catch((error) => {
                         // A full list of error codes is available at
@@ -65,7 +71,6 @@ export default function Posts() {
                         }
                     });
             }
-            setLoading(false)
 
 
         }, {
@@ -93,26 +98,26 @@ export default function Posts() {
             rows.push(
                 <div className="container 2xl:w-1/2 mx-auto">
 
-                
-                    
+
+
                     <div className="flex flex-col items-center hover:opacity-100 bg-gray-200 opacity-80 mb-10 rounded-xl">
-                    <div className="flex-1">
+                        <div className="flex-1">
                             <img src={postArray[i][2]} className='rounded-t-xl ' alt="post" />
                         </div>
                         <div className="flex-1 rounded-b-xl text-left">
                             <h1 className="text-2xl font-bold mt-5">{postArray[i][0]}</h1>
                             <p className="text-lg">{postArray[i][1]}</p>
-                        
+
                         </div>
-            
+
+                    </div>
                 </div>
-                </div>
-                
-                )
-        
-            }
+
+            )
+
+        }
         return rows;
-        
+
 
     }
 
