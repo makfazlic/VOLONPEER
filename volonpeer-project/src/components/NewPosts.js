@@ -33,6 +33,7 @@ export default function NewPosts() {
 
         const imagesRef = storageRef(storage, 'images' + "/" + currentUser.uid + "/" + newPostRef.key);
 
+        const uploadRef = 
         push(ref(database, 'posts/' + currentUser.uid), {
             title: title.current.value,
             about: about.current.value,

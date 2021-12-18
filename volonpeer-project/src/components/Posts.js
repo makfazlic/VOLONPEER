@@ -1,114 +1,121 @@
-import { ref, getDatabase, query, orderByChild, get, child, set } from "firebase/database";
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react'
+import { ref, getDatabase, query, orderByChild, get, child, set, onValue } from "firebase/database";
 import { database } from "../firebase";
 import { getStorage, ref as storageRef, getDownloadURL } from "firebase/storage";
 import { UserAddIcon } from "@heroicons/react/outline";
 
-
-
 export default function Posts() {
-
-    const [items, setItems] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const storage = getStorage();
-
-    async function getImages(post) {
-        const url = await getDownloadURL(storageRef(storage, post.image));
-        return url;
-
-    }
-
-    function renderSinglePost(item) {
-        console.log("This is a ", item);
+    const [postArray, setPostArray] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [image, setImage] = useState('')
 
 
-                return (
-                    <div className="container 2xl:w-1/2 mx-auto">
-                        <div className="card lg:card-side bordered mt-10">
-                            <figure>
-                                <img src="" alt="" />
-                            </figure>
-                            <div className="card-body">
-                                <h2 className="card-title">{item.title}</h2>
-                                <p>{item.about}</p>
-                                <div className="card-actions">
-                                    <button className="btn btn-primary bg-blueish5 hover:bg-blueish6">Contanct</button>
-                                    <button className="btn btn-ghost">More info</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                );
+    useEffect(() => {
+        const db = getDatabase();
+        const dbRef = ref(db, 'posts');
+        const items = [];
+        onValue(dbRef, (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const childData = childSnapshot.val();
+                for (let i in childData) {
+                    items.push(childData[i]);
+                }
 
-        }
+            });
 
-    function renderMultiplePost(items) {
-        return items.map(item => {
-            return renderSinglePost(item);
+            const storage = getStorage();
+
+            var newitems = items.map(f => [f.title, f.about, f.image, f.date])
+            console.log(postArray)
+
+            for (let i in newitems) {
+                const starsRef = storageRef(storage, newitems[i][2]);
+
+
+
+                getDownloadURL(starsRef)
+                    .then((url) => {
+                        // Insert url into an <img> tag to "download"
+                        newitems[i][2] = url
+                        setPostArray(postArray.concat(newitems))
+                    })
+                    .catch((error) => {
+                        // A full list of error codes is available at
+                        // https://firebase.google.com/docs/storage/web/handle-errors
+                        switch (error.code) {
+                            default:
+                                // console.log(error.message);
+                                break;
+                            case 'storage/object-not-found':
+                                console.log('File does not exist');
+                                // File doesn't exist
+                                break;
+                            case 'storage/unauthorized':
+                                console.log('User doesn\'t have permission to access the object');
+                                // User doesn't have permission to access the object
+                                break;
+                            case 'storage/canceled':
+                                console.log('User canceled the upload');
+                                // User canceled the upload
+                                break;
+                            case 'storage/unknown':
+                                console.log('Unknown error occurred, inspect the server response');
+                                // Unknown error occurred, inspect the server response
+                                break;
+                        }
+                    });
+            }
+            setLoading(false)
+
+
+        }, {
+            onlyOnce: true
         });
+        setLoading(false)
+
+    }, [])
+
+
+    if (loading) {
+        return (
+            <div className="loading">
+                <div className="loading__icon">
+                </div>
+                <div className="loading__text">
+                    <h1>Loading...</h1>
+                </div>
+            </div>
+        )
+    } else {
+        var rows = []
+        for (let i = 0; i < postArray.length; i++) {
+
+            rows.push(
+                <div className="container 2xl:w-1/2 mx-auto">
+
+                
+                    
+                    <div className="flex flex-col items-center hover:opacity-100 bg-gray-200 opacity-80 mb-10 rounded-xl">
+                    <div className="flex-1">
+                            <img src={postArray[i][2]} className='rounded-t-xl ' alt="post" />
+                        </div>
+                        <div className="flex-1 rounded-b-xl text-left">
+                            <h1 className="text-2xl font-bold mt-5">{postArray[i][0]}</h1>
+                            <p className="text-lg">{postArray[i][1]}</p>
+                        
+                        </div>
+            
+                </div>
+                </div>
+                
+                )
+        
+            }
+        return rows;
+        
+
     }
 
 
 
-async function getPosts() {
-    const dbRef = ref(getDatabase());
-
-
-    const local_items = []
-    const posts = await get(child(dbRef, `posts/`));
-    //console.log(posts.val());
-    for (let x in posts.val()) {
-        //console.log(x)
-        for (let y in posts.val()[x]) {
-            //console.log(posts.val()[x][y])
-            local_items.push(posts.val()[x][y])
-        }
-    }
-    return local_items;
-}
-
-useEffect(() => {
-    setLoading(false);
-
-    getPosts().then(items => {
-        setItems(items);
-    })
-}, []);
-
-// const [posts, setPosts] = useState({});
-
-// get(child(dbRef, `posts/`)).then((snapshot) => {
-//     if (snapshot.exists()) {
-//         setPosts(snapshot.val());
-
-//     } else {
-//         console.log("No data available");
-//     }
-// }).catch((error) => {
-//     console.error(error);
-// });
-
-// let items = [];
-
-// for (let key in posts) {
-//     for (let key2 in posts[key]) {
-//         items.push(posts[key][key2]);
-//     }};
-
-//     console.log(items);
-
-
-
-
-return (
-
-    (loading) ? (
-        <p>Loading</p>) : (
-        <div>
-
-            {renderMultiplePost(items)}
-        </div>
-    )
-
-)
 }
