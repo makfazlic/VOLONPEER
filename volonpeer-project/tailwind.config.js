@@ -52,6 +52,14 @@ module.exports = {
     plugins: [
             require('@tailwindcss/aspect-ratio'),
             require('daisyui'),
-            require('@tailwindcss/forms')
+            require('@tailwindcss/forms'),
+            require('tailwind-scrollbar'),
+            require('@themesberg/flowbite/plugin'),
+            require('@themesberg/flowbite/plugin')
+
+
         ],
+        variants: {
+            scrollbar: ['rounded']
+        }
 }

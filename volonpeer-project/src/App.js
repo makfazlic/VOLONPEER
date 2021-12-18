@@ -17,6 +17,7 @@ import Profile from './components/Profile';
 import NewPosts from './components/NewPosts';
 import Posts from './components/Posts';
 import Dashboard from './components/Dashboard';
+import SinglePost from './components/SinglePost'
 
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -71,11 +72,15 @@ function App() {
         </Route>
 
         <Route path="/posts">
-          <Header location="posts" user={currentUser}/>
-          
+            <Header location="posts" user={currentUser}/>
             <Posts />
-                
-          
+            <Footer />
+        </Route>
+
+        <Route exact path="/posts/:id">
+            <Header location="postsid" user={currentUser}/>
+            <SinglePost />
+            <Footer />
         </Route>
 
         <Route path="/dashboard">

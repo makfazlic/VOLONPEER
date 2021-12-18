@@ -1,8 +1,9 @@
 export default function Dashboard(props) {
     return (
         <>
-            <div className="container mx-auto mt-20 flex flex-row w-full">
-                <div className=" border w-1/4">
+            <div className="flex-auto">
+                <div className="sm:flex flex-col md:flex-row justify-evenly">
+
                     <div className="card compact side bg-base-100">
                         <div className="flex-row items-center space-x-4 card-body">
                             <div>
@@ -19,9 +20,7 @@ export default function Dashboard(props) {
                         </div>
                     </div>
 
-
-
-                    <div className="w-full mt-2 stats">
+                    <div className="sm:w-screen md:w-1/4 mt-2 stats r-10 ">
                         <div className="stat">
                             <div className="stat-figure text-primary">
                                 <button className="btn btn-circle btn-lg bg-base-200 btn-ghost"></button>
@@ -35,80 +34,71 @@ export default function Dashboard(props) {
                     </div>
                 </div>
 
-                <div class="divider divider-vertical bg-400/20"></div>
-                <div className="w-2/3">
-                    <p className="text-right text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Trophies</p>
-                </div>
-            </div>
 
 
-
-            <div className="mb-20 flex flex-row w-full">
-                <div className="card text-center shadow-2xl mt-20 w-1/4">
-                    <figure className="px-10 pt-10">
-                        <img src="https://picsum.photos/id/1005/400/250" className="rounded-xl" />
-                    </figure>
-                    <div className="card-body">
-                        <h2 className="card-title">shadow, center, padding</h2>
-                        <p>Rerum reiciendis beatae tenetur excepturi aut pariatur est eos. Sit sit necessitatibus veritatis sed molestiae voluptates incidunt iure sapiente.</p>
-                        <div className="justify-center card-actions">
-                            <button className="btn btn-outline btn-accent">More info</button>
+                <div className="mb-20 flex overflow-x-scroll pb-10 mt-10 scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 ml-60  md: ml-0">
+                    <div className="flex flex-nowrap lg:ml-40 md:ml-20 ml-10">
+                        <div className="inline-block px-3 sm: px-0">
+                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                                <p>Something </p>
+                                <button>Something </button>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div className="card text-center shadow-2xl mt-20 w-1/4">
-                    <figure className="px-10 pt-10">
-                        <img src="https://picsum.photos/id/1005/400/250" className="rounded-xl" />
-                    </figure>
-                    <div className="card-body">
-                        <h2 className="card-title">shadow, center, padding</h2>
-                        <p>Rerum reiciendis beatae tenetur excepturi aut pariatur est eos. Sit sit necessitatibus veritatis sed molestiae voluptates incidunt iure sapiente.</p>
-                        <div className="justify-center card-actions">
-                            <button className="btn btn-outline btn-accent">More info</button>
+                        <div className="inline-block px-3 sm: px-0">
+                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                                <p>Something </p>
+                                <button>Something </button>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div className="card text-center shadow-2xl mt-20 w-1/4">
-                    <figure className="px-10 pt-10">
-                        <img src="https://picsum.photos/id/1005/400/250" className="rounded-xl" />
-                    </figure>
-                    <div className="card-body">
-                        <h2 className="card-title">shadow, center, padding</h2>
-                        <p>Rerum reiciendis beatae tenetur excepturi aut pariatur est eos. Sit sit necessitatibus veritatis sed molestiae voluptates incidunt iure sapiente.</p>
-                        <div className="justify-center card-actions">
-                            <button className="btn btn-outline btn-accent">More info</button>
+                        <div className="inline-block px-3 sm: px-0">
+                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                                <p>Something </p>
+                                <button>Something </button>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div className="card text-center shadow-2xl mt-20 w-1/4">
-                    <figure className="px-10 pt-10">
-                        <img src="https://picsum.photos/id/1005/400/250" className="rounded-xl" />
-                    </figure>
-                    <div className="card-body">
-                        <h2 className="card-title">shadow, center, padding</h2>
-                        <p>Rerum reiciendis beatae tenetur excepturi aut pariatur est eos. Sit sit necessitatibus veritatis sed molestiae voluptates incidunt iure sapiente.</p>
-                        <div className="justify-center card-actions">
-                            <button className="btn btn-outline btn-accent">More info</button>
+                        <div className="inline-block px-3 sm: px-0">
+                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                                <p>Something </p>
+                                <button>Something </button>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div className="card text-center shadow-2xl mt-20 w-1/4">
-                    <figure className="px-10 pt-10">
-                        <img src="https://picsum.photos/id/1005/400/250" className="rounded-xl" />
-                    </figure>
-                    <div className="card-body">
-                        <h2 className="card-title">shadow, center, padding</h2>
-                        <p>Rerum reiciendis beatae tenetur excepturi aut pariatur est eos. Sit sit necessitatibus veritatis sed molestiae voluptates incidunt iure sapiente.</p>
-                        <div className="justify-center card-actions">
-                            <button className="btn btn-outline btn-accent">More info</button>
+                        <div className="inline-block px-3 sm: px-0">
+                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                                <p>Something </p>
+                                <button>Something </button>
+                            </div>
                         </div>
+
+                        <div className="inline-block px-3 sm: px-0">
+                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                                <p>Something </p>
+                                <button>Something </button>
+                            </div>
+                        </div>
+
+                        <div className="inline-block px-3 sm: px-0">
+                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                                <p>Something </p>
+                                <button>Something </button>
+                            </div>
+                        </div>
+
+                        <div className="inline-block px-3 sm: px-0">
+                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                                <p>Something </p>
+                                <button>Something </button>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
+
         </>
 
     )
