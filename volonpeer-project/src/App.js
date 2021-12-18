@@ -16,7 +16,7 @@ import Register from './components/Register';
 import Profile from './components/Profile';
 import NewPosts from './components/NewPosts';
 import Posts from './components/Posts';
-
+import Dashboard from './components/Dashboard';
 
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -80,7 +80,8 @@ function App() {
 
         <Route path="/dashboard">
           <Header location="dashboard" user={currentUser}/>
-          Dashboard of user: {currentUser && currentUser.email}
+          <Dashboard userName={currentUser && currentUser.email} />
+          <Footer />
         </Route>
 
         <Route path="/newpost">
