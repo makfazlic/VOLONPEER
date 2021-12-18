@@ -1,7 +1,7 @@
 export default function Dashboard(props) {
     return (
         <>
-            <div className="mt-20 flex flex-row w-full">
+            <div className="container mx-auto mt-20 flex flex-row w-full">
                 <div className=" border w-1/4">
                     <div className="card compact side bg-base-100">
                         <div className="flex-row items-center space-x-4 card-body">
@@ -19,7 +19,7 @@ export default function Dashboard(props) {
                         </div>
                     </div>
 
-                    
+
 
                     <div className="w-full mt-2 stats">
                         <div className="stat">
@@ -42,9 +42,60 @@ export default function Dashboard(props) {
             </div>
 
 
-            
 
-            <div className="ml-50">
+            <div className="mb-20 flex flex-row w-full">
+                <div className="card text-center shadow-2xl mt-20 w-1/4">
+                    <figure className="px-10 pt-10">
+                        <img src="https://picsum.photos/id/1005/400/250" className="rounded-xl" />
+                    </figure>
+                    <div className="card-body">
+                        <h2 className="card-title">shadow, center, padding</h2>
+                        <p>Rerum reiciendis beatae tenetur excepturi aut pariatur est eos. Sit sit necessitatibus veritatis sed molestiae voluptates incidunt iure sapiente.</p>
+                        <div className="justify-center card-actions">
+                            <button className="btn btn-outline btn-accent">More info</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="card text-center shadow-2xl mt-20 w-1/4">
+                    <figure className="px-10 pt-10">
+                        <img src="https://picsum.photos/id/1005/400/250" className="rounded-xl" />
+                    </figure>
+                    <div className="card-body">
+                        <h2 className="card-title">shadow, center, padding</h2>
+                        <p>Rerum reiciendis beatae tenetur excepturi aut pariatur est eos. Sit sit necessitatibus veritatis sed molestiae voluptates incidunt iure sapiente.</p>
+                        <div className="justify-center card-actions">
+                            <button className="btn btn-outline btn-accent">More info</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="card text-center shadow-2xl mt-20 w-1/4">
+                    <figure className="px-10 pt-10">
+                        <img src="https://picsum.photos/id/1005/400/250" className="rounded-xl" />
+                    </figure>
+                    <div className="card-body">
+                        <h2 className="card-title">shadow, center, padding</h2>
+                        <p>Rerum reiciendis beatae tenetur excepturi aut pariatur est eos. Sit sit necessitatibus veritatis sed molestiae voluptates incidunt iure sapiente.</p>
+                        <div className="justify-center card-actions">
+                            <button className="btn btn-outline btn-accent">More info</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="card text-center shadow-2xl mt-20 w-1/4">
+                    <figure className="px-10 pt-10">
+                        <img src="https://picsum.photos/id/1005/400/250" className="rounded-xl" />
+                    </figure>
+                    <div className="card-body">
+                        <h2 className="card-title">shadow, center, padding</h2>
+                        <p>Rerum reiciendis beatae tenetur excepturi aut pariatur est eos. Sit sit necessitatibus veritatis sed molestiae voluptates incidunt iure sapiente.</p>
+                        <div className="justify-center card-actions">
+                            <button className="btn btn-outline btn-accent">More info</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="card text-center shadow-2xl mt-20 w-1/4">
                     <figure className="px-10 pt-10">
                         <img src="https://picsum.photos/id/1005/400/250" className="rounded-xl" />
