@@ -70,6 +70,7 @@ export default function Posts() {
     const currentUser = useAuth()
 
 
+
     useEffect(() => {
         const db = getDatabase();
         const dbRef = ref(db, 'posts');
@@ -221,11 +222,11 @@ export default function Posts() {
             rows.push(
 
 
-                (postArray[i][10] === 5) ? <></> : <div className="relative flex flex-col items-center hover:opacity-100 m-4 bg-gray-200 opacity-80 mb-10 rounded-xl">
+                (postArray[i][10] === 5) ? <></> : <div className="relative w-80 md:w-full  mx-auto flex flex-col items-center hover:opacity-100 bg-gray-200 opacity-80 mb-10 rounded-xl">
                     <div className="h-60 flex">
                         <img src={postArray[i][6]} className='rounded-t-xl object-fill' alt="post" />
                     </div>
-                    <div className="flex-1 rounded-b-xl text-left bg-gray-200 w-full">
+                    <div className="flex-1 rounded-b-xl text-left bg-gray-200 w-full mx-10">
                         <h1 className="px-5 text-xl font-bold mt-5 text-center">{postArray[i][3]}</h1>
                         <p className="px-4 mt-5 mx-2 pb-2 mb-5 text-lg break-words overflow-y-auto scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 h-32 scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
                             {postArray[i][4]}
@@ -304,7 +305,7 @@ export default function Posts() {
             </div>
         </> : <div className="min-h-screen">
             <h1 className="text-2xl font-bold w-full leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate text-center mt-20 mb-10">All posts</h1>
-            <div className='container mx-auto grid  md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 '>
+            <div className='container mx-auto grid gap-x-4 md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 '>
                 {rows}
             </div>
         </div>

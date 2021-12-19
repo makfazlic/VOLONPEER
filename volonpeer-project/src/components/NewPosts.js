@@ -23,7 +23,26 @@ export default function NewPosts() {
   const [selectedFile, setSelectedFile] = useState();
   const [selected, setIsSelected] = useState(false);
   const [value, setValue] = React.useState(new Date());
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
+  const [status, setStatus] = useState(null);
 
+  const getLocation = () => {
+
+    if (!navigator.geolocation) {
+      setStatus('Geolocation is not supported by your browser');
+    } else {
+      setStatus('Locating...');
+      navigator.geolocation.getCurrentPosition((position) => {
+        setStatus(null);
+        setLat(position.coords.latitude);
+        setLng(position.coords.longitude);
+        console.log(lat, lng);
+      }, () => {
+        setStatus('Unable to retrieve your location');
+      });
+    }
+  }
 
   const changeHandler = (event) => {
     console.log(event.target.files[0])
@@ -51,7 +70,7 @@ export default function NewPosts() {
           "You can see your post on your dashboard at any time",
           "success"
 
-        ).then(()=> {
+        ).then(() => {
           window.location.href = "/posts"
 
         })
@@ -72,7 +91,7 @@ export default function NewPosts() {
     const newPostRef = push(postListRef);
 
     const imagesRef = storageRef(storage, 'images' + "/" + currentUser.uid + "/" + newPostRef.key);
-    const postUnderListRef = ref(database, "posts" + "/" + currentUser.uid )
+    const postUnderListRef = ref(database, "posts" + "/" + currentUser.uid)
 
     const pushSet = push(postUnderListRef)
 
@@ -89,6 +108,8 @@ export default function NewPosts() {
       time: new Date().getTime(),
       dateby: value.toLocaleString(),
       reported: 0,
+      lat: lat || 46.8182,
+      lng: lng || 8.2275,
       reportedby: {
         one: "",
         two: "",
@@ -176,8 +197,13 @@ export default function NewPosts() {
 
                   </div>
 
-
-
+                  <div className="col-span-6 sm:col-span-3">
+                    <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 mb-5">
+                      Share your location if you need help here.
+                    </label>
+                    <a className='py-3 px-4 rounded hover:bg-gray-300 text-black border-2 border-black mt-2' onClick={
+                      () => { getLocation() }}>{(lat === null || lng === null) ? "Get Location" : "Located"}</a>
+                  </div>
 
 
 
