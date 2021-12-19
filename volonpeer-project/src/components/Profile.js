@@ -1,12 +1,128 @@
+import React, { useRef, useState } from 'react';
+import { register_base, useAuth, login_google, storage } from '../firebase'
+import { getDatabase, ref, onValue, set, runTransaction } from "firebase/database";
+import { ref as storageRef, uploadBytes } from 'firebase/storage'
+import { BadgeCheckIcon } from '@heroicons/react/outline';
+import { unstable_composeClasses } from '@mui/material';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+
+
 export default function Profile() {
+    const [selectedFile, setSelectedFile] = useState();
+    const [selected, setIsSelected] = useState(false);
+
+
+    const [selectedFile1, setSelectedFile1] = useState();
+    const [selected1, setIsSelected1] = useState(false);
+
+    const [userInfoFromData, setuserInfoFromData] = useState();
+
+    const aboutRef = useRef()
+    const cityRef = useRef()
+    const countryRef = useRef()
+    const coverPicRef = selectedFile1;
+    const firstNameRef = useRef()
+    const lastNameRef = useRef()
+    const profilePicRef = selectedFile1;
+    const stateRef = useRef()
+    const streetAdressRef = useRef()
+    const zipRef = useRef()
+
+
+
+    const changeHandler = (event) => {
+        console.log(event.target.files[0])
+        setSelectedFile(event.target.files[0]);
+        setIsSelected(true);
+    };
+
+    const changeHandler1 = (event) => {
+        console.log(event.target.files[0])
+        setSelectedFile1(event.target.files[0]);
+        setIsSelected1(true);
+    };
+
+    async function editUserInfo(e) {
+        e.preventDefault()
+        const db = getDatabase();
+        const postRef = ref(db, 'users/' + getAuth().currentUser.uid);
+        const imagesRef1 = storageRef(storage, 'images' + "/users" + "/" + getAuth().currentUser.uid + "/1/" + postRef.key);
+        const imagesRef2 = storageRef(storage, 'images' + "/users" + "/" + getAuth().currentUser.uid + "/2/" + postRef.key);
+
+        runTransaction(postRef, (currentData) => {
+            if (currentData == null) {
+                console.log("User Does not Exists");
+            }
+            else {
+
+
+
+                console.log("User Exists");
+                currentData.firstname = firstNameRef.current.value;
+                currentData.lastname = lastNameRef.current.value;
+                currentData.country = countryRef.current.value;
+                currentData.streeAdress = streetAdressRef.current.value;
+                currentData.city = cityRef.current.value;
+                currentData.state = stateRef.current.value;
+                currentData.zip = zipRef.current.value;
+                currentData.about = aboutRef.current.value;
+                console.log(currentData)
+                if (selected) {
+                    uploadBytes(imagesRef1, selectedFile).then(() => {
+                        currentData.profilePic = imagesRef1.fullPath;
+                        set(postRef, currentData);
+                    });
+
+                };
+
+                if (selected1) {
+
+                    uploadBytes(imagesRef2, selectedFile1).then(() => {
+                        currentData.coverPic = imagesRef2.fullPath;
+                        set(postRef, currentData);
+                    });
+
+                };
+            }
+
+            return currentData;
+        })
+        window.location.href = "/posts"
+    }
+
+    function readingFromDataBase() {
+        const db = getDatabase();
+        console.log(getAuth().currentUser);
+        const auth = getAuth();
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const starCountRef = ref(db, 'users/' + user.uid);
+                console.log(starCountRef);
+                onValue(starCountRef, (snapshot) => {
+                    const data = snapshot.val();
+                    setuserInfoFromData(data);
+                    console.log("This is data", data);
+                });
+            } else {
+                console.log("User is not found");
+            }
+        });
+    }
+
+
+    readingFromDataBase();
+    console.log()
+    //console.log(getAuth().currentUser)
     return (
         <>
             <div>
                 <div className="mt-10 sm:mt-0 mb-32">
-                    <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate text-center mt-20 mb-10">Account Information </h1>
+                    <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate text-center mt-20 ">Account Information </h1>
+                    <p className="text-center mb-10 text-greenish5"> Update your account informaition and add cover and profile photos</p>
                     <div className="md:grid md:grid-cols-2 md:gap-6">
                         <div className="mt-5 mx-auto mb-3 md:mt-0 md:col-span-2">
-                            <form action="#" method="POST">
+                            <form onSubmit={editUserInfo}>
                                 <div className=" overflow-hidden sm:rounded-md">
                                     <div className="px-4 py-5 bg-white sm:p-6">
                                         <div className="grid grid-cols-6 gap-6">
@@ -15,6 +131,7 @@ export default function Profile() {
                                                     First name
                                                 </label>
                                                 <input
+                                                    ref={firstNameRef}
                                                     type="text"
                                                     name="first-name"
                                                     id="first-name"
@@ -28,23 +145,11 @@ export default function Profile() {
                                                     Last name
                                                 </label>
                                                 <input
+                                                    ref={lastNameRef}
                                                     type="text"
                                                     name="last-name"
                                                     id="last-name"
                                                     autoComplete="family-name"
-                                                    className="mt-1 focus:ring-blueish5 focus:border-blueish5 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                                />
-                                            </div>
-
-                                            <div className="col-span-6 sm:col-span-4">
-                                                <label htmlFor="email-address" className="block text-sm font-medium text-gray-700">
-                                                    Email address
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    name="email-address"
-                                                    id="email-address"
-                                                    autoComplete="email"
                                                     className="mt-1 focus:ring-blueish5 focus:border-blueish5 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                 />
                                             </div>
@@ -54,6 +159,7 @@ export default function Profile() {
                                                     Country
                                                 </label>
                                                 <select
+                                                    ref={countryRef}
                                                     id="country"
                                                     name="country"
                                                     autoComplete="country-name"
@@ -313,6 +419,7 @@ export default function Profile() {
                                                     Street address
                                                 </label>
                                                 <input
+                                                    ref={streetAdressRef}
                                                     type="text"
                                                     name="street-address"
                                                     id="street-address"
@@ -326,6 +433,7 @@ export default function Profile() {
                                                     City
                                                 </label>
                                                 <input
+                                                    ref={cityRef}
                                                     type="text"
                                                     name="city"
                                                     id="city"
@@ -339,6 +447,7 @@ export default function Profile() {
                                                     State / Province
                                                 </label>
                                                 <input
+                                                    ref={stateRef}
                                                     type="text"
                                                     name="region"
                                                     id="region"
@@ -352,6 +461,7 @@ export default function Profile() {
                                                     ZIP / Postal code
                                                 </label>
                                                 <input
+                                                    ref={zipRef}
                                                     type="text"
                                                     name="postal-code"
                                                     id="postal-code"
@@ -372,6 +482,7 @@ export default function Profile() {
                                             </label>
                                             <div className="mt-1">
                                                 <textarea
+                                                    ref={aboutRef}
                                                     id="about"
                                                     name="about"
                                                     rows={3}
@@ -386,156 +497,83 @@ export default function Profile() {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700">Photo</label>
-                                            <div className="mt-1 flex items-center">
-                                                <span className="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                                                    <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                                        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                    </svg>
-                                                </span>
-                                                <button
-                                                    type="button"
-                                                    className="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blueish5"
-                                                >
-                                                    Change
-                                                </button>
-                                            </div>
-                                        </div>
+                                            <label className="block text-sm font-medium text-gray-700">Profile Picture</label>
+                                            <div className="border border-dashed rounded-xl mt-1 border-gray-500 relative">
+                                                <input id="file-upload" name="file-upload" type="file" multiple className="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50" onChange={changeHandler} />
+                                                {selected ?
+                                                    <div className="text-center p-20 absolute top-0 right-0 left-0 m-auto flex justify-center items-center">
 
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700">Dashboard Cover photo</label>
-                                            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                                                <div className="space-y-1 text-center">
-                                                    <svg
-                                                        className="mx-auto h-12 w-12 text-gray-400"
-                                                        stroke="currentColor"
-                                                        fill="none"
-                                                        viewBox="0 0 48 48"
-                                                        aria-hidden="true"
-                                                    >
-                                                        <path
-                                                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                            strokeWidth={2}
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                    </svg>
-                                                    <div className="flex text-sm text-gray-600">
-                                                        <label
-                                                            htmlFor="file-upload"
-                                                            className="relative cursor-pointer bg-white rounded-md font-medium text-blueish6 hover:text-blueish5 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blueish5"
-                                                        >
-                                                            <span>Upload a file</span>
-                                                            <input id="file-upload" name="file-upload" type="file" className="sr-only" />
-                                                        </label>
-                                                        <p className="pl-1">or drag and drop</p>
-                                                    </div>
-                                                    <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                                        <BadgeCheckIcon className='h-7 mr-1' />
+                                                        <span className="">Selected</span>
+                                                    </div> : <div className="text-center p-10 absolute top-0 right-0 left-0 m-auto">
+
+                                                        <div className="space-y-1 text-center">
+                                                            <svg
+                                                                className="mx-auto h-12 w-12 text-gray-400"
+                                                                stroke="currentColor"
+                                                                fill="none"
+                                                                viewBox="0 0 48 48"
+                                                                aria-hidden="true"
+                                                            >
+                                                                <path
+                                                                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                                    strokeWidth={2}
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                />
+                                                            </svg>
+                                                        </div>
+                                                        <h4>
+                                                            Drop files anywhere to upload
+                                                            <br />or
+                                                        </h4>
+                                                        <p className="">Select Files</p>
+                                                    </div>}
+                                            </div>
+
+                                            <div>
+                                                <label className="mt-5 block text-sm font-medium text-gray-700">Dashboard Cover Photo</label>
+                                                <div className="border border-dashed rounded-xl mt-1 border-gray-500 relative">
+                                                    <input id="file-upload" name="file-upload" type="file" multiple className="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50" onChange={changeHandler1} />
+                                                    {selected1 ?
+                                                        <div className="text-center p-20 absolute top-0 right-0 left-0 m-auto flex justify-center items-center">
+
+                                                            <BadgeCheckIcon className='h-7 mr-1' />
+                                                            <span className="">Selected</span>
+                                                        </div> : <div className="text-center p-10 absolute top-0 right-0 left-0 m-auto">
+
+                                                            <div className="space-y-1 text-center">
+                                                                <svg
+                                                                    className="mx-auto h-12 w-12 text-gray-400"
+                                                                    stroke="currentColor"
+                                                                    fill="none"
+                                                                    viewBox="0 0 48 48"
+                                                                    aria-hidden="true"
+                                                                >
+                                                                    <path
+                                                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                                        strokeWidth={2}
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                    />
+                                                                </svg>
+                                                            </div>
+                                                            <h4>
+                                                                Drop files anywhere to upload
+                                                                <br />or
+                                                            </h4>
+                                                            <p className="">Select Files</p>
+                                                        </div>}
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
+                                    </div>
                                 </div>
 
 
                                 <div className="overflow-hidden sm:rounded-md">
-                                    <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
-                                        <fieldset>
-                                            <legend className="text-base font-medium text-gray-900">By Email</legend>
-                                            <div className="mt-4 space-y-4">
-                                                <div className="flex items-start">
-                                                    <div className="flex items-center h-5">
-                                                        <input
-                                                            id="comments"
-                                                            name="comments"
-                                                            type="checkbox"
-                                                            className="focus:ring-blueish5 h-4 w-4 text-blueish6 border-gray-300 rounded"
-                                                        />
-                                                    </div>
-                                                    <div className="ml-3 text-sm">
-                                                        <label htmlFor="comments" className="font-medium text-gray-700">
-                                                            Comments
-                                                        </label>
-                                                        <p className="text-gray-500">Get notified when someones posts a comment on a posting.</p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-start">
-                                                    <div className="flex items-center h-5">
-                                                        <input
-                                                            id="candidates"
-                                                            name="candidates"
-                                                            type="checkbox"
-                                                            className="focus:ring-blueish5 h-4 w-4 text-blueish6 border-gray-300 rounded"
-                                                        />
-                                                    </div>
-                                                    <div className="ml-3 text-sm">
-                                                        <label htmlFor="candidates" className="font-medium text-gray-700">
-                                                            Candidates
-                                                        </label>
-                                                        <p className="text-gray-500">Get notified when a candidate applies for a job.</p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-start">
-                                                    <div className="flex items-center h-5">
-                                                        <input
-                                                            id="offers"
-                                                            name="offers"
-                                                            type="checkbox"
-                                                            className="focus:ring-blueish5 h-4 w-4 text-blueish6 border-gray-300 rounded"
-                                                        />
-                                                    </div>
-                                                    <div className="ml-3 text-sm">
-                                                        <label htmlFor="offers" className="font-medium text-gray-700">
-                                                            Offers
-                                                        </label>
-                                                        <p className="text-gray-500">Get notified when a candidate accepts or rejects an offer.</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                        <fieldset>
-                                            <div>
-                                                <legend className="text-base font-medium text-gray-900">Push Notifications</legend>
-                                                <p className="text-sm text-gray-500">These are delivered via SMS to your mobile phone.</p>
-                                            </div>
-                                            <div className="mt-4 space-y-4">
-                                                <div className="flex items-center">
-                                                    <input
-                                                        id="push-everything"
-                                                        name="push-notifications"
-                                                        type="radio"
-                                                        className="focus:ring-blueish5 h-4 w-4 text-blueish6 border-gray-300"
-                                                    />
-                                                    <label htmlFor="push-everything" className="ml-3 block text-sm font-medium text-gray-700">
-                                                        Everything
-                                                    </label>
-                                                </div>
-                                                <div className="flex items-center">
-                                                    <input
-                                                        id="push-email"
-                                                        name="push-notifications"
-                                                        type="radio"
-                                                        className="focus:ring-blueish5 h-4 w-4 text-blueish6 border-gray-300"
-                                                    />
-                                                    <label htmlFor="push-email" className="ml-3 block text-sm font-medium text-gray-700">
-                                                        Same as email
-                                                    </label>
-                                                </div>
-                                                <div className="flex items-center">
-                                                    <input
-                                                        id="push-nothing"
-                                                        name="push-notifications"
-                                                        type="radio"
-                                                        className="focus:ring-blueish5 h-4 w-4 text-blueish6 border-gray-300"
-                                                    />
-                                                    <label htmlFor="push-nothing" className="ml-3 block text-sm font-medium text-gray-700">
-                                                        No push notifications
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </div>
+
                                     <div className="px-4 py-3 bg-gray-50 rounded-t-md text-right sm:px-6">
                                         <button
                                             type="submit"

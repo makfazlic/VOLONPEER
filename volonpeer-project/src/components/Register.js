@@ -4,10 +4,33 @@ import { LockClosedIcon } from '@heroicons/react/solid'
 import Swal from 'sweetalert2';
 import logo2 from '../images/logo2.png'
 import { register_base, useAuth, login_google } from '../firebase'
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, onValue, set } from "firebase/database";
 import google1 from '../images/google1.png'
 import google2 from '../images/google2.png'
 
+async function populateUserField(user) {
+    const db = getDatabase();
+    const startCountRef = ref(db, 'users/' + user.user.uid);
+    onValue(startCountRef, (snapshot) => {
+        if (snapshot.val() == null) {
+            console.log("User Does not Exists");
+            set(ref(db, 'users/' + user.user.uid), {
+                firstname: "",
+                lastname: "",
+                country: "",
+                streeAdress: "",
+                city: "",
+                state: "", 
+                zip: "",
+                about: "",
+                profilePic: "images/profile_basic.jpg",
+                coverPic: "images/cover_basic.jpg",        
+            });
+        } else {
+            console.log("User Exists");
+        }
+    })     
+}
 
 export default function Login() {
     const emailRef = useRef()
@@ -17,7 +40,6 @@ export default function Login() {
     const [loading, setLoading] = useState(false)
     const currentUser = useAuth()
 
-    console.log("This is the current user ", currentUser);
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -47,7 +69,9 @@ export default function Login() {
 
         try {
             setError('')
-            register_base(emailRef.current.value, passwordRef.current.value)
+            register_base(emailRef.current.value, passwordRef.current.value).then(async (user) => {
+            await populateUserField(user)}).catch(e => {
+                console.log("Error", e)})
         } catch (error) {
             setError("Failed to create an account")
             Swal.fire({
@@ -56,7 +80,8 @@ export default function Login() {
                 text: 'Failed to create an account',
             })
         }
-        console.log("Current User for Email", currentUser.uid)
+        //console.log("Current User for Email", currentUser)
+
         setLoading(false)
 
     }
@@ -65,7 +90,10 @@ export default function Login() {
 async function handleGoogleLogin() {
     setLoading(true)
     try {
-        await console.log(login_google())
+        login_google().then(async (user) => {
+            console.log("User", user)
+        await populateUserField(user)}).catch(e => {
+            console.log("Error", e)});
     } catch (error) {
         setError("Failed to create an account")
           Swal.fire({ 
@@ -75,6 +103,8 @@ async function handleGoogleLogin() {
         })
     }
     console.log("Current user for google", currentUser);
+
+
     setLoading(false)
     
 }

@@ -70,19 +70,29 @@ function App() {
           <Header location="leaderboard" user={currentUser} />
           leaderboard
         </Route>
+        <Route exact path="/posts/:id">
+          <Header location="postsid" 
+          user={currentUser} 
+          render={(props) => <SinglePost {...props} />} />          
+          <Footer />
+        </Route>
 
         <Route path="/posts">
           <Header location="posts" user={currentUser} />
           {currentUser ? <Posts />
-            : <><h1>Not found</h1>
-              <Footer /></>}
-        </Route>
-
-        <Route exact path="/posts/:id">
-          <Header location="postsid" user={currentUser} />
-          <SinglePost />
+            : <>
+              <div class="flex items-center justify-center h-screen">
+                <div class="flex items-center justify-center space-x-2 animate-bounce">
+                  <div class="w-8 h-8 bg-blueish5 rounded-full"></div>
+                  <div class="w-8 h-8 bg-greenish5 rounded-full"></div>
+                  <div class="w-8 h-8 bg-gray-500 rounded-full"></div>
+                </div>
+              </div>
+            </>}
           <Footer />
         </Route>
+
+
 
         <Route path="/dashboard">
           <Header location="dashboard" user={currentUser} />
