@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { register_base, useAuth, login_google, storage } from '../firebase'
 import { getDatabase, ref, onValue, set, runTransaction } from "firebase/database";
 import { ref as storageRef, uploadBytes } from 'firebase/storage'
@@ -16,7 +16,7 @@ export default function Profile() {
     const [selectedFile1, setSelectedFile1] = useState();
     const [selected1, setIsSelected1] = useState(false);
 
-    const [userInfoFromData, setuserInfoFromData] = useState();
+    const [userInfoFromData, setuserInfoFromData] = useState([]);
 
     const aboutRef = useRef()
     const cityRef = useRef()
@@ -28,7 +28,19 @@ export default function Profile() {
     const stateRef = useRef()
     const streetAdressRef = useRef()
     const zipRef = useRef()
+    const auth = useAuth();
 
+    useEffect(() => {
+
+        console.log(getAuth().currentUser.uid);
+        const db = getDatabase();
+        const starCountRef = ref(db, 'users/' + getAuth().currentUser.uid);
+        onValue(starCountRef, (snapshot) => {
+            const data = snapshot.val();
+            console.log(data);
+        });
+
+    }, [])
 
 
     const changeHandler = (event) => {
@@ -91,28 +103,52 @@ export default function Profile() {
         window.location.href = "/posts"
     }
 
-    function readingFromDataBase() {
-        const db = getDatabase();
-        console.log(getAuth().currentUser);
-        const auth = getAuth();
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                const starCountRef = ref(db, 'users/' + user.uid);
-                console.log(starCountRef);
-                onValue(starCountRef, (snapshot) => {
-                    const data = snapshot.val();
-                    setuserInfoFromData(data);
-                    console.log("This is data", data);
-                });
-            } else {
-                console.log("User is not found");
-            }
-        });
-    }
+    // function readingFromDataBase() {
+    //     const db = getDatabase();
+    //     console.log(getAuth().currentUser);
+    //     const auth = getAuth();
+    //     const user = auth.currentUser;
+
+    //     // while () {
+    //     //     console.log("Waiting for the auth to intialize")
+    //     // }
+
+    //     onAuthStateChanged(auth, (user) => {
+    //         if (user) {
+    //             console.log(user.uid)
+
+    //             const starCountRef = ref(db, 'users/' + user.uid);
+    //             //console.log(starCountRef);
+    //             onValue(starCountRef, (snapshot) => {
+    //                 const data = snapshot.val();
+    //                 console.log(data);
+    //                 updateInfoDatabase(data); 
+    //                 return data;         
+    //             });
+    //         } else {
+    //             console.log("Auth is intializing");
+    //         }
+    //       });
+    // }
+
+    // const databaseinfo = [];
+    // function updateInfoDatabase(data) {
+    //     const datatemp = data;
+    //     //console.log("datatemp", datatemp);
+    //     //console.log(data);
+
+    //     // data.forEach((values) => {
+    //     //     databaseinfo.push(values);
+    //     // })
+    //     databaseinfo.push(datatemp);
+
+    // }
+    // readingFromDataBase().then(() => {
+    //     console.log(databaseinfo[0]); 
+    // });
 
 
-    readingFromDataBase();
-    console.log()
+
     //console.log(getAuth().currentUser)
     return (
         <>
@@ -131,6 +167,7 @@ export default function Profile() {
                                                     First name
                                                 </label>
                                                 <input
+
                                                     ref={firstNameRef}
                                                     type="text"
                                                     name="first-name"

@@ -206,12 +206,12 @@ export default function Posts() {
     if (loading) {
         return (
             <div class="flex items-center justify-center h-screen">
-            <div class="flex items-center justify-center space-x-2 animate-bounce">
-                <div class="w-8 h-8 bg-blueish5 rounded-full"></div>
-                <div class="w-8 h-8 bg-greenish5 rounded-full"></div>
-                <div class="w-8 h-8 bg-gray-500 rounded-full"></div>
+                <div class="flex items-center justify-center space-x-2 animate-bounce">
+                    <div class="w-8 h-8 bg-blueish5 rounded-full"></div>
+                    <div class="w-8 h-8 bg-greenish5 rounded-full"></div>
+                    <div class="w-8 h-8 bg-gray-500 rounded-full"></div>
+                </div>
             </div>
-        </div>
         )
     } else {
         var rows = []
@@ -220,85 +220,94 @@ export default function Posts() {
             rows.push(
 
 
-                (postArray[i][10] === 5) ?  <></> : <div className="relative flex flex-col items-center hover:opacity-100 m-4 bg-gray-200 opacity-80 mb-10 rounded-xl">
-                            <div className="h-60 flex">
-                                <img src={postArray[i][6]} className='rounded-t-xl object-fill' alt="post" />
-                            </div>
-                            <div className="flex-1 rounded-b-xl text-left bg-gray-200 w-full">
-                                <h1 className="px-5 text-xl font-bold mt-5 text-center">{postArray[i][3]}</h1>
-                                <p className="px-4 mt-5 mx-2 pb-2 mb-5 text-lg break-words overflow-y-auto scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 h-32 scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
-                                    {postArray[i][4]}
-                                </p>
+                (postArray[i][10] === 5) ? <></> : <div className="relative flex flex-col items-center hover:opacity-100 m-4 bg-gray-200 opacity-80 mb-10 rounded-xl">
+                    <div className="h-60 flex">
+                        <img src={postArray[i][6]} className='rounded-t-xl object-fill' alt="post" />
+                    </div>
+                    <div className="flex-1 rounded-b-xl text-left bg-gray-200 w-full">
+                        <h1 className="px-5 text-xl font-bold mt-5 text-center">{postArray[i][3]}</h1>
+                        <p className="px-4 mt-5 mx-2 pb-2 mb-5 text-lg break-words overflow-y-auto scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 h-32 scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
+                            {postArray[i][4]}
+                        </p>
 
-                                <div className='flex justify-between px-5 w-full mb-5'>
-                                    <a className="block px-4 py-2 text-md text-white bg-blueish5 hover:bg-blueish6 font-bold rounded text-white" href={'/posts/'+postArray[i][2]}>See details</a>
-                                    {postArray[i][12].one == currentUser.uid || postArray[i][12].two == currentUser.uid || postArray[i][12].three == currentUser.uid || postArray[i][12].four == currentUser.uid || postArray[i][12].five == currentUser.uid ?
-                                        <div className='flex justify-center items-center text-md opacity-60 text-red-600 cursor-pointer '
-                                            onClick={() => {
-
-
-                                                Swal.fire(
-                                                    'Already reported!',
-                                                    'You have already reported this post',
-                                                    'info'
-                                                )
+                        <div className='flex justify-between px-5 w-full mb-5'>
+                            <a className="block px-4 py-2 text-md text-white bg-blueish5 hover:bg-blueish6 font-bold rounded text-white" href={'/posts/' + postArray[i][1] + "/" + postArray[i][2]}>See details</a>
+                            {postArray[i][12].one == currentUser.uid || postArray[i][12].two == currentUser.uid || postArray[i][12].three == currentUser.uid || postArray[i][12].four == currentUser.uid || postArray[i][12].five == currentUser.uid ?
+                                <div className='flex justify-center items-center text-md opacity-60 text-red-600 cursor-pointer '
+                                    onClick={() => {
 
 
-
-                                            }
-
-                                            }
-                                        >
-
-                                            <span className='mr-1'>Reported</span>
-                                            <ShieldExclamationIcon className='h-5' /> </div>
-
-                                        :
-
-                                        <div className='flex justify-center items-center text-md hover:text-red-600 cursor-pointer '
-                                            onClick={() => {
-
-                                                updateReport(postArray[i][1], postArray[i][2], currentUser.uid)
-
-                                                Swal.fire(
-                                                    'Reported!',
-                                                    'Thank you for helping us build an inclusive and friendly community of helpers',
-                                                    'success'
-                                                ).then(() => {
-                                                    window.location.reload()
-                                                })
+                                        Swal.fire(
+                                            'Already reported!',
+                                            'You have already reported this post',
+                                            'info'
+                                        )
 
 
-
-
-
-
-
-                                            }
-
-                                            }
-                                        >
-
-                                            <span className='mr-1'>Report</span>
-                                            <ShieldExclamationIcon className='h-5' /> </div>
 
                                     }
-                                </div>
-                                <div className='top-0 right-0 absolute pb-10 pl-48 rounded-tr-xl pt-2 pr-4 bg-gradient-to-tr from-transparent via-transparent to-black'>
-                                    <span className='text-white text-sm font-bold'>{date(postArray[i][11], postArray[i][7])}</span>
-                                </div>
-                            </div >
+
+                                    }
+                                >
+
+                                    <span className='mr-1'>Reported</span>
+                                    <ShieldExclamationIcon className='h-5' /> </div>
+
+                                :
+
+                                <div className='flex justify-center items-center text-md hover:text-red-600 cursor-pointer '
+                                    onClick={() => {
+
+                                        updateReport(postArray[i][1], postArray[i][2], currentUser.uid)
+
+                                        Swal.fire(
+                                            'Reported!',
+                                            'Thank you for helping us build an inclusive and friendly community of helpers',
+                                            'success'
+                                        ).then(() => {
+                                            window.location.reload()
+                                        })
+
+
+
+
+
+
+
+                                    }
+
+                                    }
+                                >
+
+                                    <span className='mr-1'>Report</span>
+                                    <ShieldExclamationIcon className='h-5' /> </div>
+
+                            }
                         </div>
+                        <div className='top-0 right-0 absolute pb-10 pl-48 rounded-tr-xl pt-2 pr-4 bg-gradient-to-tr from-transparent via-transparent to-black'>
+                            <span className='text-white text-sm font-bold'>{date(postArray[i][11], postArray[i][7])}</span>
+                        </div>
+                    </div >
+                </div>
 
             )
 
         }
-        return <div className="min-h-screen">
+        return loading ? <>
+            <div class="flex items-center justify-center h-screen">
+                <div class="flex items-center justify-center space-x-2 animate-bounce">
+                    <div class="w-8 h-8 bg-blueish5 rounded-full"></div>
+                    <div class="w-8 h-8 bg-greenish5 rounded-full"></div>
+                    <div class="w-8 h-8 bg-gray-500 rounded-full"></div>
+                </div>
+            </div>
+        </> : <div className="min-h-screen">
             <h1 className="text-2xl font-bold w-full leading-7 text-gray-900 sm:text-3xl sm:leading-9 sm:truncate text-center mt-20 mb-10">All posts</h1>
             <div className='container mx-auto grid  md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 '>
                 {rows}
             </div>
-        </div>;
+        </div>
+
 
 
     }

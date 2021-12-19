@@ -181,7 +181,7 @@ async function handleGoogleLogin() {
 
                         <div className="text-sm">
                             Already have an account?
-                            <a href="#" className="font-medium text-greenish6 hover:text-greenish5">
+                            <a href="/login" className="font-medium text-greenish6 hover:text-greenish5">
                                 <span> </span>Log in
                             </a>
                         </div>

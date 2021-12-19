@@ -19,7 +19,7 @@ import Posts from './components/Posts';
 import Dashboard from './components/Dashboard';
 import SinglePost from './components/SinglePost'
 
-
+import logo1 from './images/logo1.png';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 
@@ -70,10 +70,9 @@ function App() {
           <Header location="leaderboard" user={currentUser} />
           leaderboard
         </Route>
-        <Route exact path="/posts/:id">
-          <Header location="postsid" 
-          user={currentUser} 
-          render={(props) => <SinglePost {...props} />} />          
+        <Route exact path="/posts/:id/:pid" component={SinglePost}>
+          <Header location="postsid" user={currentUser} />
+          <SinglePost />
           <Footer />
         </Route>
 
@@ -81,12 +80,17 @@ function App() {
           <Header location="posts" user={currentUser} />
           {currentUser ? <Posts />
             : <>
-              <div class="flex items-center justify-center h-screen">
-                <div class="flex items-center justify-center space-x-2 animate-bounce">
-                  <div class="w-8 h-8 bg-blueish5 rounded-full"></div>
-                  <div class="w-8 h-8 bg-greenish5 rounded-full"></div>
-                  <div class="w-8 h-8 bg-gray-500 rounded-full"></div>
+              <div class="flex items-center justify-center h-screen flex flex-col w-1/3 mx-auto text-center">
+                <img src={logo1} class="w-20 mb-10" />
+                <p className='text-2xl font-bold '>
+                  Not authorised to access
+                </p>
+                <div className='flex justify-center py-10'>
+                  <a href='/login' class="bg-blue-500 mr-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login</a>
+                  <a href='/register' class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Register</a>
                 </div>
+                <p className='text-xl font-bold '>
+                  Please log on to our platform to have all features                </p>
               </div>
             </>}
           <Footer />
@@ -96,19 +100,66 @@ function App() {
 
         <Route path="/dashboard">
           <Header location="dashboard" user={currentUser} />
-          <Dashboard userName={currentUser && currentUser.email} />
+          {currentUser ? <Dashboard userName={currentUser && currentUser.email} />
+
+            : <>
+              <div class="flex items-center justify-center h-screen flex flex-col w-1/3 mx-auto text-center">
+                <img src={logo1} class="w-20 mb-10" />
+                <p className='text-2xl font-bold '>
+                  Not authorised to access
+                </p>
+                <div className='flex justify-center py-10'>
+                  <a href='/login' class="bg-blue-500 mr-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login</a>
+                  <a href='/register' class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Register</a>
+                </div>
+                <p className='text-xl font-bold '>
+                  Please log on to our platform to have all features                </p>
+              </div>
+            </>}
           <Footer />
         </Route>
 
         <Route path="/newpost">
           <Header location="newpost" user={currentUser} />
-          <NewPosts />
+          {currentUser ? <NewPosts />
+
+            : <>
+              <div class="flex items-center justify-center h-screen flex flex-col w-1/3 mx-auto text-center">
+                <img src={logo1} class="w-20 mb-10" />
+                <p className='text-2xl font-bold '>
+                  Not authorised to access
+                </p>
+                <div className='flex justify-center py-10'>
+                  <a href='/login' class="bg-blue-500 mr-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login</a>
+                  <a href='/register' class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Register</a>
+                </div>
+                <p className='text-xl font-bold '>
+                  Please log on to our platform to have all features                </p>
+              </div>
+            </>}
+
           <Footer />
         </Route>
 
         <Route path="/profile">
           <Header user={currentUser} />
-          <Profile />
+          {currentUser ? <Profile />
+
+            : <>
+              <div class="flex items-center justify-center h-screen flex flex-col w-1/3 mx-auto text-center">
+                <img src={logo1} class="w-20 mb-10" />
+                <p className='text-2xl font-bold '>
+                  Not authorised to access
+                </p>
+                <div className='flex justify-center py-10'>
+                  <a href='/login' class="bg-blue-500 mr-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login</a>
+                  <a href='/register' class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Register</a>
+                </div>
+                <p className='text-xl font-bold '>
+                  Please log on to our platform to have all features                </p>
+              </div>
+            </>}
+
           <Footer />
         </Route>
 
