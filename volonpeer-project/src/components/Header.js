@@ -1,9 +1,12 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import logo1 from '../images/logo1.png'
-import { logout } from '../firebase'
+import { logout, useAuth, database, storage } from '../firebase'
+import { getStorage, ref as storageRef, getDownloadURL } from "firebase/storage";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { ref, getDatabase, query, orderByChild, get, child, set, onValue } from "firebase/database";
 
 
 
@@ -12,12 +15,55 @@ function classNames(...classes) {
 }
 
 export default function Header(props) {
+  const [userInfoFromData, setuserInfoFromData] = useState({});
   const navigation = [
     { name: 'Home', href: '/', current: props.location == "home" },
     { name: 'Posts', href: '/posts', current: props.location == "posts" },
     { name: 'Leaderboard', href: '/leaderboard', current: props.location == "leaderboard" },
     { name: 'Privacy', href: '/privacy-policy', current: props.location == "privacy-policy" },
   ]
+
+  useEffect(() => {
+    const storage = getStorage();
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      console.log(getAuth())
+      console.log(getAuth().currentUser.uid);
+      const db = getDatabase();
+      const starCountRef = ref(db, 'users/' + getAuth().currentUser.uid);
+      onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        console.log(data);
+
+
+        if (data.profilePic != "images/profile_basic.jpg") {
+          const starsRef = storageRef(storage, data.profilePic);
+
+          getDownloadURL(starsRef)
+            .then((url) => {
+              data.profilePic = url;
+              setuserInfoFromData(data);
+
+            })
+        } else {
+          const starsRef = storageRef(storage, "images/profile_basic.jpg");
+          getDownloadURL(starsRef)
+            .then((url) => {
+              data.profilePic = url;
+              setuserInfoFromData(data);
+            })
+
+        }
+
+
+
+
+      });
+    });
+
+
+  }, [])
+
 
   return (
     <Disclosure as="nav" className="bg-white sticky top-0 z-10">
@@ -64,14 +110,14 @@ export default function Header(props) {
                         {item.name}
                       </a>
                     ))}
-                    {props.user ? 
+                    {props.user ?
                       <a
                         href="/dashboard"
                         className={classNames(
-                          props.location=="dashboard" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-greenish5 hover:text-greenish7',
+                          props.location == "dashboard" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-greenish5 hover:text-greenish7',
                           'px-3 py-2 rounded-md text-sm font-medium'
                         )}
-                        aria-current={props.location=="dashboard" ? 'page' : undefined}
+                        aria-current={props.location == "dashboard" ? 'page' : undefined}
                       >
                         Dashboard
                       </a> : <></>}
@@ -95,7 +141,7 @@ export default function Header(props) {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        src={userInfoFromData.profilePic}
                         alt=""
                       />
                     </Menu.Button>
@@ -123,7 +169,7 @@ export default function Header(props) {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                          href='/login'
+                            href='/login'
                             onClick={logout}
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
@@ -162,37 +208,37 @@ export default function Header(props) {
               ))}
               {props.user ? (
                 <>
-              <a href="/dashboard" aria-current={props.location == "dashboard" ? 'page' : undefined}
-                                className={classNames(
+                  <a href="/dashboard" aria-current={props.location == "dashboard" ? 'page' : undefined}
+                    className={classNames(
 
-                                  props.location=="dashboard" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-gray-400 hover:bg-gray-700 hover:text-white',
-                                  'block px-3 py-2 rounded-md text-base font-medium'
-                                )}
-              >Dashboard</a>
-              <a href="/newpost" aria-current={props.location == "newpost" ? 'page' : undefined}
-                                className={classNames(
+                      props.location == "dashboard" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-gray-400 hover:bg-gray-700 hover:text-white',
+                      'block px-3 py-2 rounded-md text-base font-medium'
+                    )}
+                  >Dashboard</a>
+                  <a href="/newpost" aria-current={props.location == "newpost" ? 'page' : undefined}
+                    className={classNames(
 
-                                  props.location=="newpost" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-white hover:bg-gray-700 hover:text-white',
-                                  'block px-3 py-2 rounded-md text-base font-medium bg-blueish5 hover:bg-blueish6'
-                                )}
-              >+ Post</a>
+                      props.location == "newpost" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-white hover:bg-gray-700 hover:text-white',
+                      'block px-3 py-2 rounded-md text-base font-medium bg-blueish5 hover:bg-blueish6'
+                    )}
+                  >+ Post</a>
 
-              </>
+                </>
               ) :
                 <>
-                  <a  href="/login" aria-current={props.location == "login" ? 'page' : undefined}
-                                                  className={classNames(
+                  <a href="/login" aria-current={props.location == "login" ? 'page' : undefined}
+                    className={classNames(
 
-                                                    props.location=="login" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-gray-400 hover:bg-gray-700 hover:text-white',
-                                                    'block px-3 py-2 rounded-md text-base font-medium'
-                                                  )}
+                      props.location == "login" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-gray-400 hover:bg-gray-700 hover:text-white',
+                      'block px-3 py-2 rounded-md text-base font-medium'
+                    )}
                   >Login</a>
                   <a href="/register" aria-current={props.location == "register" ? 'page' : undefined}
-                                                  className={classNames(
+                    className={classNames(
 
-                                                    props.location=="register" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-gray-400 hover:bg-gray-700 hover:text-white',
-                                                    'block px-3 py-2 rounded-md text-base font-medium'
-                                                  )}
+                      props.location == "register" ? 'bg-greenish5 text-white hover:bg-greenish7' : 'text-gray-400 hover:bg-gray-700 hover:text-white',
+                      'block px-3 py-2 rounded-md text-base font-medium'
+                    )}
                   >Register</a>
                 </>
               }

@@ -24,7 +24,8 @@ async function populateUserField(user) {
                 zip: "",
                 about: "",
                 profilePic: "images/profile_basic.jpg",
-                coverPic: "images/cover_basic.jpg",        
+                coverPic: "images/cover_basic.jpg",   
+                points: 0     
             });
         } else {
             console.log("User Exists");

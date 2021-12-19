@@ -79,6 +79,7 @@ export default function Posts() {
                 const childData = childSnapshot.val();
                 for (let i in childData) {
                     items.push(childData[i]);
+                    console.log(childData[i]);
                 }
 
             });

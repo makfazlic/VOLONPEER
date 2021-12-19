@@ -4,7 +4,8 @@ import { getDatabase, ref, onValue, set, runTransaction } from "firebase/databas
 import { ref as storageRef, uploadBytes } from 'firebase/storage'
 import { BadgeCheckIcon } from '@heroicons/react/outline';
 import { unstable_composeClasses } from '@mui/material';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, deleteUser } from "firebase/auth";
+import Swal from 'sweetalert2';
 
 
 
@@ -16,7 +17,7 @@ export default function Profile() {
     const [selectedFile1, setSelectedFile1] = useState();
     const [selected1, setIsSelected1] = useState(false);
 
-    const [userInfoFromData, setuserInfoFromData] = useState([]);
+    const [userInfoFromData, setuserInfoFromData] = useState({});
 
     const aboutRef = useRef()
     const cityRef = useRef()
@@ -31,28 +32,30 @@ export default function Profile() {
     const auth = useAuth();
 
     useEffect(() => {
-
-        console.log(getAuth().currentUser.uid);
         const db = getDatabase();
         const starCountRef = ref(db, 'users/' + getAuth().currentUser.uid);
         onValue(starCountRef, (snapshot) => {
             const data = snapshot.val();
-            console.log(data);
+
+            setuserInfoFromData(data);
         });
 
     }, [])
 
 
+
     const changeHandler = (event) => {
-        console.log(event.target.files[0])
+
         setSelectedFile(event.target.files[0]);
         setIsSelected(true);
     };
 
     const changeHandler1 = (event) => {
-        console.log(event.target.files[0])
+
         setSelectedFile1(event.target.files[0]);
+        console.log(event.target.files);
         setIsSelected1(true);
+        
     };
 
     async function editUserInfo(e) {
@@ -62,6 +65,7 @@ export default function Profile() {
         const imagesRef1 = storageRef(storage, 'images' + "/users" + "/" + getAuth().currentUser.uid + "/1/" + postRef.key);
         const imagesRef2 = storageRef(storage, 'images' + "/users" + "/" + getAuth().currentUser.uid + "/2/" + postRef.key);
 
+        //console.log(imagesRef1.fullPath);
         runTransaction(postRef, (currentData) => {
             if (currentData == null) {
                 console.log("User Does not Exists");
@@ -71,18 +75,19 @@ export default function Profile() {
 
 
                 console.log("User Exists");
-                currentData.firstname = firstNameRef.current.value;
-                currentData.lastname = lastNameRef.current.value;
-                currentData.country = countryRef.current.value;
-                currentData.streeAdress = streetAdressRef.current.value;
-                currentData.city = cityRef.current.value;
-                currentData.state = stateRef.current.value;
-                currentData.zip = zipRef.current.value;
-                currentData.about = aboutRef.current.value;
-                console.log(currentData)
+                currentData.firstname = firstNameRef.current.value ? firstNameRef.current.value : currentData.firstname;
+                currentData.lastname = lastNameRef.current.value ? lastNameRef.current.value : currentData.lastname;
+                currentData.country = countryRef.current.value ? countryRef.current.value : currentData.country;
+                currentData.streeAdress = streetAdressRef.current.value ? streetAdressRef.current.value : currentData.streeAdress;
+                currentData.city = cityRef.current.value ? cityRef.current.value : currentData.city;
+                currentData.state = stateRef.current.value ? stateRef.current.value : currentData.state;
+                currentData.zip = zipRef.current.value ? zipRef.current.value : currentData.zip;
+                currentData.about = aboutRef.current.value ? aboutRef.current.value : currentData.about;
+
                 if (selected) {
                     uploadBytes(imagesRef1, selectedFile).then(() => {
                         currentData.profilePic = imagesRef1.fullPath;
+                        console.log(imagesRef1.fullPath);
                         set(postRef, currentData);
                     });
 
@@ -92,6 +97,7 @@ export default function Profile() {
 
                     uploadBytes(imagesRef2, selectedFile1).then(() => {
                         currentData.coverPic = imagesRef2.fullPath;
+                        console.log(imagesRef2.fullPath);
                         set(postRef, currentData);
                     });
 
@@ -100,56 +106,31 @@ export default function Profile() {
 
             return currentData;
         })
-        window.location.href = "/posts"
+        Swal.fire(
+            "You have edited your Profile",
+            "You can edit it whenever you want to again",
+            "success"
+  
+          ).then(()=> {
+            window.location.href = "/posts"
+  
+          })
     }
 
-    // function readingFromDataBase() {
-    //     const db = getDatabase();
-    //     console.log(getAuth().currentUser);
-    //     const auth = getAuth();
-    //     const user = auth.currentUser;
+    function deleteUserFromDatabase() {
+        const auth = getAuth();
+        const user = auth.currentUser;
 
-    //     // while () {
-    //     //     console.log("Waiting for the auth to intialize")
-    //     // }
+        deleteUser(user).then(() => {
+            console.log("User is Delete");
 
-    //     onAuthStateChanged(auth, (user) => {
-    //         if (user) {
-    //             console.log(user.uid)
+             
+        }).catch((error) => {
+            // An error ocurred
+            // ...
+        });
+    }
 
-    //             const starCountRef = ref(db, 'users/' + user.uid);
-    //             //console.log(starCountRef);
-    //             onValue(starCountRef, (snapshot) => {
-    //                 const data = snapshot.val();
-    //                 console.log(data);
-    //                 updateInfoDatabase(data); 
-    //                 return data;         
-    //             });
-    //         } else {
-    //             console.log("Auth is intializing");
-    //         }
-    //       });
-    // }
-
-    // const databaseinfo = [];
-    // function updateInfoDatabase(data) {
-    //     const datatemp = data;
-    //     //console.log("datatemp", datatemp);
-    //     //console.log(data);
-
-    //     // data.forEach((values) => {
-    //     //     databaseinfo.push(values);
-    //     // })
-    //     databaseinfo.push(datatemp);
-
-    // }
-    // readingFromDataBase().then(() => {
-    //     console.log(databaseinfo[0]); 
-    // });
-
-
-
-    //console.log(getAuth().currentUser)
     return (
         <>
             <div>
@@ -167,7 +148,7 @@ export default function Profile() {
                                                     First name
                                                 </label>
                                                 <input
-
+                                                    placeholder={userInfoFromData.firstname}
                                                     ref={firstNameRef}
                                                     type="text"
                                                     name="first-name"
@@ -182,6 +163,7 @@ export default function Profile() {
                                                     Last name
                                                 </label>
                                                 <input
+                                                    placeholder={userInfoFromData.lastname}
                                                     ref={lastNameRef}
                                                     type="text"
                                                     name="last-name"
@@ -456,6 +438,7 @@ export default function Profile() {
                                                     Street address
                                                 </label>
                                                 <input
+                                                    placeholder={userInfoFromData.streeAdress}
                                                     ref={streetAdressRef}
                                                     type="text"
                                                     name="street-address"
@@ -470,6 +453,7 @@ export default function Profile() {
                                                     City
                                                 </label>
                                                 <input
+                                                    placeholder={userInfoFromData.city}
                                                     ref={cityRef}
                                                     type="text"
                                                     name="city"
@@ -484,6 +468,7 @@ export default function Profile() {
                                                     State / Province
                                                 </label>
                                                 <input
+                                                    placeholder={userInfoFromData.state}
                                                     ref={stateRef}
                                                     type="text"
                                                     name="region"
@@ -498,6 +483,7 @@ export default function Profile() {
                                                     ZIP / Postal code
                                                 </label>
                                                 <input
+                                                    placeholder={userInfoFromData.zip}
                                                     ref={zipRef}
                                                     type="text"
                                                     name="postal-code"
@@ -519,12 +505,12 @@ export default function Profile() {
                                             </label>
                                             <div className="mt-1">
                                                 <textarea
+                                                    placeholder={userInfoFromData.about}
                                                     ref={aboutRef}
                                                     id="about"
                                                     name="about"
                                                     rows={3}
                                                     className="shadow-sm focus:ring-blueish5 focus:border-blueish5 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
-                                                    placeholder="you@example.com"
                                                     defaultValue={''}
                                                 />
                                             </div>
@@ -611,13 +597,44 @@ export default function Profile() {
 
                                 <div className="overflow-hidden sm:rounded-md">
 
-                                    <div className="px-4 py-3 bg-gray-50 rounded-t-md text-right sm:px-6">
+                                    <div className="px-4 py-3 bg-gray-50 rounded-t-md text-right sm:px-6 flex justify-between">
+
+                                        <button
+                                            onClick={(e) =>{
+                                                e.preventDefault();
+                                                Swal.fire({
+                                                    title: 'Are you sure?',
+                                                    text: "You won't be able to revert this!",
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#3085d6',
+                                                    cancelButtonColor: '#d33',
+                                                    confirmButtonText: 'Yes, delete it!'
+                                                    }).then((result) => {
+                                                    if (result.value) {
+                                                        Swal.fire(
+                                                        'Deleted!',
+                                                        'Your file has been deleted.',
+                                                        'success'
+                                                        ).then(() => {
+                                                            deleteUserFromDatabase()
+                                                        })
+                                                    }
+                                                    }
+                                                )}}
+                                            className="text-white hover:bg-red-600 inline-flex justify-right py-2 px-4 border border-transparent shadow-sm text-center text-sm font-medium rounded-md bg-red-500 hover:bg-red focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blueish5"
+                                        >
+                                            Delete you account
+                                        </button>
+
                                         <button
                                             type="submit"
                                             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blueish6 hover:bg-blueish7 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blueish5"
                                         >
                                             Save
                                         </button>
+
+
                                     </div>
                                 </div>
 
