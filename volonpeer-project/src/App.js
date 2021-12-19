@@ -40,7 +40,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 function App() {
 
-  
+
 
   const currentUser = useAuth()
 
@@ -50,7 +50,7 @@ function App() {
 
         <Route exact path="/">
           <div>
-            <Header location="home" user={currentUser}/>
+            <Header location="home" user={currentUser} />
             <Jumbotron />
             <Features />
             <Stats />
@@ -62,48 +62,49 @@ function App() {
         </Route>
 
         <Route path="/privacy-policy">
-          <Header location="privacy-policy" user={currentUser}/>
+          <Header location="privacy-policy" user={currentUser} />
           privacy policy
         </Route>
 
         <Route path="/leaderboard">
-          <Header location="leaderboard" user={currentUser}/>
+          <Header location="leaderboard" user={currentUser} />
           leaderboard
         </Route>
 
         <Route path="/posts">
-            <Header location="posts" user={currentUser}/>
-            <Posts />
-            <Footer />
+          <Header location="posts" user={currentUser} />
+          {currentUser ? <Posts />
+            : <><h1>Not found</h1>
+              <Footer /></>}
         </Route>
 
         <Route exact path="/posts/:id">
-            <Header location="postsid" user={currentUser}/>
-            <SinglePost />
-            <Footer />
+          <Header location="postsid" user={currentUser} />
+          <SinglePost />
+          <Footer />
         </Route>
 
         <Route path="/dashboard">
-          <Header location="dashboard" user={currentUser}/>
+          <Header location="dashboard" user={currentUser} />
           <Dashboard userName={currentUser && currentUser.email} />
           <Footer />
         </Route>
 
         <Route path="/newpost">
-          <Header location="newpost" user={currentUser}/>
+          <Header location="newpost" user={currentUser} />
           <NewPosts />
           <Footer />
         </Route>
 
         <Route path="/profile">
-          <Header user={currentUser}/>
+          <Header user={currentUser} />
           <Profile />
           <Footer />
         </Route>
 
         <Route path="/register">
           <div className="flex flex-col h-screen justify-evenly">
-            <Header location="register" user={currentUser}/>
+            <Header location="register" user={currentUser} />
             <Register />
             <Footer />
           </div>
@@ -111,7 +112,7 @@ function App() {
 
         <Route path="/login">
           <div className="flex flex-col h-screen justify-evenly">
-            <Header location="login" user={currentUser}/>
+            <Header location="login" user={currentUser} />
             <Login />
             <Footer />
           </div>

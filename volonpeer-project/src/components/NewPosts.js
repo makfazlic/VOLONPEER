@@ -72,20 +72,34 @@ export default function NewPosts() {
     const newPostRef = push(postListRef);
 
     const imagesRef = storageRef(storage, 'images' + "/" + currentUser.uid + "/" + newPostRef.key);
+    const postUnderListRef = ref(database, "posts" + "/" + currentUser.uid )
+
+    const pushSet = push(postUnderListRef)
 
     const upload = {
       name: name.current.value || "Posted anonymously",
       user: currentUser.uid,
-      postid: newPostRef.key,
+      postid: pushSet.key,
       title: title.current.value,
+      compelling: compelling.current.value,
       about: about.current.value,
       location: location.current.value || "Unspecified",
       image: selected ? imagesRef.fullPath : "images/basic.png",
       datepost: today.toLocaleString(),
+      time: new Date().getTime(),
       dateby: value.toLocaleString(),
-      reported: 0
+      reported: 0,
+      reportedby: {
+        one: "",
+        two: "",
+        three: "",
+        four: "",
+        five: "",
+
+      }
+
     }
-    push(ref(database, 'posts/' + currentUser.uid), upload);
+    set(pushSet, upload);
 
     if (selected) {
       console.log(upload.image)
@@ -124,7 +138,7 @@ export default function NewPosts() {
                       className="mt-1 focus:ring-blueish5 focus:border-blueish5 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                     <p className="mt-2 text-sm text-gray-500">
-                      This is going to be displayed publically.
+                      This is going to be displayed on yout post.
                     </p>
                   </div>
 

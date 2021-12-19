@@ -1,4 +1,80 @@
+import { useState, useEffect } from 'react'
+import { ref, getDatabase, query, orderByChild, get, child, set, onValue } from "firebase/database";
+import { useAuth, database } from "../firebase";
+import { getStorage, ref as storageRef, getDownloadURL } from "firebase/storage";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+
+
+
+
+
 export default function Dashboard(props) {
+    const [postArray, setPostArray] = useState([])
+    const [loading, setLoading] = useState(true)
+    //const [userID, setUserID] = useState("")
+
+
+
+    useEffect(async () => {
+        const db = getDatabase();
+        const dbRef = ref(db, 'posts');
+        const items = [];
+        const userItems = [];
+        const auth = getAuth();
+        //const user = auth.currentUser;
+        //console.log("This is the user", auth);
+
+
+         onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/firebase.User
+                const uid = user.uid;
+                await onValue(dbRef, (snapshot) => {
+                    snapshot.forEach((childSnapshot) => {
+                        const childData = childSnapshot.val();
+                        //console.log(childData);
+                        for (let i in childData) {
+                            items.push(childData[i]);
+                        }
+
+                    });
+
+
+                    items.forEach((i) => {
+                        if (i.user == uid) {
+                            userItems.push(i);
+                        }
+                    })
+
+
+                }, []);
+                // ...
+            } else {
+                // User is signed out
+                // ...
+            }
+        });
+        console.log(dbRef);
+        //console.log(userItems);
+        setPostArray(userItems);
+
+
+
+
+
+    }, []);
+
+    console.log(postArray, postArray.length);
+    if (postArray.length != 0) {
+        var rows = [];
+        console.log(postArray);
+    } else {
+        console.log("It is empty")
+    }
+
+
     return (
         <>
             <div className="flex-auto">
@@ -45,54 +121,7 @@ export default function Dashboard(props) {
                             </div>
                         </div>
 
-                        <div className="inline-block px-3 sm: px-0">
-                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                                <p>Something </p>
-                                <button>Something </button>
-                            </div>
-                        </div>
 
-                        <div className="inline-block px-3 sm: px-0">
-                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                                <p>Something </p>
-                                <button>Something </button>
-                            </div>
-                        </div>
-
-                        <div className="inline-block px-3 sm: px-0">
-                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                                <p>Something </p>
-                                <button>Something </button>
-                            </div>
-                        </div>
-
-                        <div className="inline-block px-3 sm: px-0">
-                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                                <p>Something </p>
-                                <button>Something </button>
-                            </div>
-                        </div>
-
-                        <div className="inline-block px-3 sm: px-0">
-                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                                <p>Something </p>
-                                <button>Something </button>
-                            </div>
-                        </div>
-
-                        <div className="inline-block px-3 sm: px-0">
-                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                                <p>Something </p>
-                                <button>Something </button>
-                            </div>
-                        </div>
-
-                        <div className="inline-block px-3 sm: px-0">
-                            <div className="w-96 h-96 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                                <p>Something </p>
-                                <button>Something </button>
-                            </div>
-                        </div>
 
 
                     </div>
@@ -102,4 +131,6 @@ export default function Dashboard(props) {
         </>
 
     )
+
+
 }

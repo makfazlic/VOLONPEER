@@ -4,6 +4,7 @@ import { LockClosedIcon } from '@heroicons/react/solid'
 import Swal from 'sweetalert2';
 import logo2 from '../images/logo2.png'
 import { register_base, useAuth, login_google } from '../firebase'
+import { getDatabase, ref, set } from "firebase/database";
 import google1 from '../images/google1.png'
 import google2 from '../images/google2.png'
 
@@ -15,6 +16,8 @@ export default function Login() {
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const currentUser = useAuth()
+
+    console.log("This is the current user ", currentUser);
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -53,7 +56,7 @@ export default function Login() {
                 text: 'Failed to create an account',
             })
         }
-
+        console.log("Current User for Email", currentUser.uid)
         setLoading(false)
 
     }
@@ -71,7 +74,9 @@ async function handleGoogleLogin() {
             text: 'Failed to create an account',
         })
     }
+    console.log("Current user for google", currentUser);
     setLoading(false)
+    
 }
 
 
