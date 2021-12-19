@@ -74,7 +74,9 @@ export default function Dashboard(props) {
         console.log("It is empty")
     }
 
-
+    postArray.forEach((i) => {
+        console.log(i);
+    })
     return (
         <>
             <div className="flex-auto">

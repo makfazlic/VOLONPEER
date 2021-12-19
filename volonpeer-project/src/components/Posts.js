@@ -34,9 +34,12 @@ function updateReport(user_id, post_id, user) {
     const postRef = ref(database, `posts/${user_id}/${post_id}`)
     runTransaction(postRef, (post) => {
         if (post) {
-            console.log(post.reportedby)
-
-            post.reported++;
+            for (let key in post.reportedby) {
+                users.push(post.reportedby[key])
+            }
+            if (post.reported <= 4) {
+                post.reported++;
+            }
             if (post.reportedby.one == "") {
                 post.reportedby.one = user;
             } else if (post.reportedby.two == "") {
@@ -56,7 +59,8 @@ function updateReport(user_id, post_id, user) {
 
 
     })
-
+    console.log(users)
+    return users
 }
 
 export default function Posts() {
@@ -96,6 +100,7 @@ export default function Posts() {
                 f.time, // 11
                 f.reportedby // 12
             ])
+            console.log("These are:", newitems[0][12].one)
             console.log(postArray)
 
             for (let i in newitems) {
@@ -215,46 +220,75 @@ export default function Posts() {
             rows.push(
 
 
+                (postArray[i][10] === 4) ?  <></> : <div className="relative flex flex-col items-center hover:opacity-100 m-4 bg-gray-200 opacity-80 mb-10 rounded-xl">
+                            <div className="h-60 flex">
+                                <img src={postArray[i][6]} className='rounded-t-xl object-fill' alt="post" />
+                            </div>
+                            <div className="flex-1 rounded-b-xl text-left bg-gray-200 w-full">
+                                <h1 className="px-5 text-xl font-bold mt-5 text-center">{postArray[i][3]}</h1>
+                                <p className="px-4 mt-5 mx-2 pb-2 mb-5 text-lg break-words overflow-y-auto scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 h-32 scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
+                                    {postArray[i][4]}
+                                </p>
 
-                <div className="relative flex flex-col items-center hover:opacity-100 m-4 bg-gray-200 opacity-80 mb-10 rounded-xl">
-                    <div className="h-60 flex">
-                        <img src={postArray[i][6]} className='rounded-t-xl object-fill' alt="post" />
-                    </div>
-                    <div className="flex-1 rounded-b-xl text-left bg-gray-200 w-full">
-                        <h1 className="px-5 text-xl font-bold mt-5 text-center">{postArray[i][3]}</h1>
-                        <p className="px-4 mt-5 mx-2 pb-2 mb-5 text-lg break-words overflow-y-auto scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100 h-32 scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
-                            {postArray[i][4]}
-                        </p>
-
-                    </div>
-                    <div className='flex justify-between px-5 w-full mb-5'>
-                        <a className="block px-4 py-2 text-md text-white bg-blueish5 hover:bg-blueish6 font-bold rounded text-white">See details</a>
-                        <div className='flex justify-center items-center text-md hover:text-red-600 cursor-pointer '
-                            onClick={() => {
+                                <div className='flex justify-between px-5 w-full mb-5'>
+                                    <a className="block px-4 py-2 text-md text-white bg-blueish5 hover:bg-blueish6 font-bold rounded text-white">See details</a>
+                                    {postArray[i][12].one == currentUser.uid || postArray[i][12].two == currentUser.uid || postArray[i][12].three == currentUser.uid || postArray[i][12].four == currentUser.uid || postArray[i][12].five == currentUser.uid ?
+                                        <div className='flex justify-center items-center text-md opacity-60 text-red-600 cursor-pointer '
+                                            onClick={() => {
 
 
-                                Swal.fire(
-                                    'Reported!',
-                                    'Thank you for helping us build an inclusive and friendly community of helpers',
-                                    'success'
-                                )
-                                updateReport(postArray[i][1], postArray[i][2], currentUser.uid)
+                                                Swal.fire(
+                                                    'Already reported!',
+                                                    'You have already reported this post',
+                                                    'info'
+                                                )
 
 
 
-                            }
+                                            }
 
-                            }
-                        >
-                            <><span className='mr-1'>Report</span>
-                                <ShieldExclamationIcon className='h-5' />
-                            </>
+                                            }
+                                        >
+
+                                            <span className='mr-1'>Reported</span>
+                                            <ShieldExclamationIcon className='h-5' /> </div>
+
+                                        :
+
+                                        <div className='flex justify-center items-center text-md hover:text-red-600 cursor-pointer '
+                                            onClick={() => {
+
+                                                updateReport(postArray[i][1], postArray[i][2], currentUser.uid)
+
+                                                Swal.fire(
+                                                    'Reported!',
+                                                    'Thank you for helping us build an inclusive and friendly community of helpers',
+                                                    'success'
+                                                ).then(() => {
+                                                    window.location.reload()
+                                                })
+
+
+
+
+
+
+
+                                            }
+
+                                            }
+                                        >
+
+                                            <span className='mr-1'>Report</span>
+                                            <ShieldExclamationIcon className='h-5' /> </div>
+
+                                    }
+                                </div>
+                                <div className='top-0 right-0 absolute pb-10 pl-48 rounded-tr-xl pt-2 pr-4 bg-gradient-to-tr from-transparent via-transparent to-black'>
+                                    <span className='text-white text-sm font-bold'>{date(postArray[i][11], postArray[i][7])}</span>
+                                </div>
+                            </div >
                         </div>
-                    </div>
-                    <div className='top-0 right-0 absolute pb-10 pl-48 rounded-tr-xl pt-2 pr-4 bg-gradient-to-tr from-transparent via-transparent to-black'>
-                        <span className='text-white text-sm font-bold'>{date(postArray[i][11], postArray[i][7])}</span>
-                    </div>
-                </div>
 
             )
 
