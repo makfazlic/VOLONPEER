@@ -4,8 +4,9 @@ import { getStorage, ref as storageRef, getDownloadURL } from 'firebase/storage'
 import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 import MapComp from './MapComp';
 import { getStepLabelUtilityClass } from '@mui/material';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, sendEmailVerification } from "firebase/auth";
 import Swal from 'sweetalert2';
+import emailjs from "emailjs-com";
 // 0: "Long Desc"
 // 1: "Short desc"
 // 2: "12/14/2017, 5:25:02 PM"
@@ -33,6 +34,37 @@ export default function SinglePost(props) {
     const [long, setLong] = useState(0);
     const [userid, setUserid] = useState('');
     //const id = props.match.params.id;
+    function sendEmail(email_from, email_to, post_id) {
+
+        console.log(email_from, email_to, post_id)
+        emailjs.send('service_latewwj', 'template_egddb5o', {
+            post: "volonpeer.web.app/posts/" + post_id,
+            from: email_from,
+            to: email_to,
+            }, process.env.REACT_APP_EMAILJS_API_KEY)
+            .then((result) => {
+                console.log(result.text);
+                // analytics event
+                //logEvent(analytics, 'contact_form_submit', {
+                //    name: e.target.name.value,
+                //    email: e.target.email.value,
+                //    message: e.target.message.value
+                //});
+                Swal.fire(
+                    'Thank you!',
+                    'We will email you soon!',
+                    'success'
+                  )
+            }, (error) => {
+                console.log(error.text);
+                Swal.fire(
+                    'Oops...',
+                    'Something went wrong!',
+                    'error'
+                    )
+            });
+            
+    }
 
     const auth = getAuth();
 
@@ -64,6 +96,7 @@ export default function SinglePost(props) {
                     setLat(items[7]);
                     setLong(items[8]);
                     setUserid(auth.currentUser.uid);
+                    console.log(post)
                     setLoading(false);
 
                 }
@@ -79,18 +112,21 @@ export default function SinglePost(props) {
 
     }, []);
 
-    function helpedPostTriger(postId) {
+    async function helpedPostTriger(userIdOfPost, postId) {
+        console.log(postId);
         const db = getDatabase();
-        const postRef = ref(db, '/posts/' + postId);
+        console.log(userIdOfPost);
+        const postRef = ref(db, 'posts/' + userIdOfPost + "/" + postId);
+        console.log(postRef);
 
-        runTransaction(postRef, (post) => {
+        await runTransaction(postRef, (post) => {
             if (post) {
                 
                 post.state = "Accepted";
                 post.acceptedID = userid;
                 console.log(post);
             }
-            
+            return post
         });
     }
 
@@ -140,7 +176,7 @@ export default function SinglePost(props) {
                                         showCancelButton: true,
                                         confirmButtonColor: '#3085d6',
                                         cancelButtonColor: '#d33',
-                                        confirmButtonText: 'Yes, delete it!'
+                                        confirmButtonText: 'Yes, I want!'
                                     }).then((result) => {
                                         if (result.value) {
                                             Swal.fire(
@@ -149,7 +185,8 @@ export default function SinglePost(props) {
                                                 'success'
                                             ).then(() => {
                                                 //deletePost(value.postid);
-                                                helpedPostTriger(post[10])
+                                                helpedPostTriger(post[17], post[11])
+                                                sendEmail(auth.currentUser.email, post[5], post[17]+"/"+post[11])
                                             })
                                         }
                                     }

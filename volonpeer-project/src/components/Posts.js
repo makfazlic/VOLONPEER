@@ -100,7 +100,8 @@ export default function Posts() {
                 f.location, // 9
                 f.reported, //10
                 f.time, // 11
-                f.reportedby // 12
+                f.reportedby, // 12
+                f.state // 13
             ])
             console.log("These are:", newitems[0][12].one)
             console.log(postArray)
@@ -220,8 +221,8 @@ export default function Posts() {
         for (let i = 0; i < postArray.length; i++) {
 
             rows.push(
-
-
+             (postArray[i][13] == "Accepted") ? <></> :
+                
                 (postArray[i][10] === 5) ? <></> : <div className="relative w-80 md:w-full  mx-auto flex flex-col items-center hover:opacity-100 bg-gray-200 opacity-80 mb-10 rounded-xl">
                     <div className="h-60 flex">
                         <img src={postArray[i][6]} className='rounded-t-xl object-cover' alt="post" />

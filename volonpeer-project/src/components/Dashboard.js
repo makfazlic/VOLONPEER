@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ref, getDatabase, query, orderByChild, get, child, set, onValue } from "firebase/database";
+import { ref, getDatabase, query, orderByChild, get, child, set, onValue, runTransaction } from "firebase/database";
 import { useAuth, database, storage } from "../firebase";
 import { getStorage, ref as storageRef, getDownloadURL, deleteObject } from "firebase/storage";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -19,6 +19,7 @@ export default function Dashboard(props) {
     const [image, setImage] = useState("");
     const [userItemsFromDatabase, setuserItemsFromDatabase] = useState([]);
     const [userIdFromDatabase, setuserIdFromDatabase] = useState("");
+    const [jobFromDatabase, setJobFromDatabase] = useState([]);
 
 
 
@@ -64,6 +65,30 @@ export default function Dashboard(props) {
                     }
                 })
 
+            });
+
+            const items1 = [];
+            const userItems1 = []
+            const dbRef1 = ref(database, 'posts');
+            onValue(dbRef1, (snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    const childData = childSnapshot.val();
+                    for (let i in childData) {
+                        items1.push(childData[i]);
+                        //console.log(childData[i].user);
+                        //console.log(getAuth().currentUser.uid, childData[i].user);
+                        console.log(childData[i]);
+                        console.log(getAuth().currentUser.uid);
+                        console.log(childData[i].acceptID);
+                        if (childData[i].acceptedID === getAuth().currentUser.uid) {
+                            userItems1.push(childData[i]);
+                        }
+                        console.log(userItems1);
+                        //console.log(userItems);
+                        setJobFromDatabase(userItems1);
+                    }
+
+                })
             });
 
             const starCountRef = ref(db, 'users/' + getAuth().currentUser.uid);
@@ -151,7 +176,7 @@ export default function Dashboard(props) {
             return 200
         }
     }
-    
+
     function deletePost(id) {
         //const storage = getStorage();
         console.log(userIdFromDatabase);
@@ -164,61 +189,189 @@ export default function Dashboard(props) {
         });
         //const desertRef = ref(storage, 'posts/' + userIdFromDatabase + '/' + id);
 
-    //dbRef.remove();
+        //dbRef.remove();
 
+    }
+
+    function addPoints(acceptedId) {
+        console.log(userIdFromDatabase);
+        const db = getDatabase();
+        const postRef = ref(db, 'users/' + acceptedId);
+        runTransaction(postRef, (user) => {
+            if (user) {
+                user.points += 5;
+            }
+            return user;
+        });
+    }
+
+    function reducePoints(acceptedId) {
+        console.log(userIdFromDatabase);
+        const db = getDatabase();
+        const postRef = ref(db, 'users/' + acceptedId);
+        runTransaction(postRef, (user) => {
+            if (user) {
+                if (user.points > 4) {
+                    user.points -= 5;
+                } else {
+                    user.points = 0;
+                }
+
+            }
+            return user;
+        });
+    }
+
+    function getJob() {
+
+        const render = [];
+        for (var i = 0; i < jobFromDatabase.length; i++) {
+
+            render.push(
+                <tr>
+                    <th>{i+1}</th>
+                    <td>{jobFromDatabase[i].title}</td>
+                    <td>{jobFromDatabase[i].name}</td>
+                    <td>{jobFromDatabase[i].dateby}</td>
+                    <td>{jobFromDatabase[i].location}</td>
+                    <td>{jobFromDatabase[i].email}</td>
+                </tr>
+            )
+        }
+        console.log(render);
+        return render;
     }
 
     function renderPosts() {
         const render = []
         userItemsFromDatabase.forEach((value) => {
             //console.log(value);
-            render.push(
-                <div className="w-96 h-96 mr-5 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                    <img className="h-1/3 w-full" src={value.image} />
-                    <div className='flex flex-row justify-evenly pt-10 h-1/3'>
-                        <h1 className='font-bold'> Title </h1>
-                        <div className="divider divider-vertical"></div>
-                        <h1 className='w-1/2 text-left'>{value.title} </h1>
-                    </div>
+            (value.state == "Not Accepted") ?
+                render.push(
+                    <div className="w-96 h-96 mr-5 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                        <img className="h-1/3 w-full" src={value.image} />
+                        <div className='flex flex-row justify-evenly pt-10 h-1/3'>
+                            <h1 className='font-bold'> Title </h1>
+                            <div className="divider divider-vertical"></div>
+                            <h1 className='w-1/2 text-left'>{value.title} </h1>
+                        </div>
 
-                    <div className='flex flex-row justify-evenly pt-10'>
-                        <h1 className='font-bold pr-10'> Status </h1>
-                        <h1 className='w-1/2 text-left'>{value.state}</h1>
-                    </div>
+                        <div className='flex flex-row justify-evenly pt-10'>
+                            <h1 className='font-bold pr-10'> Status </h1>
+                            <h1 className='w-1/2 text-left'>{value.state}</h1>
+                        </div>
 
-                    <div className='w-full flex justify-center items-end mt-3'>
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                Swal.fire({
-                                    title: 'Are you sure?',
-                                    text: "You won't be able to revert this!",
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Yes, delete it!'
-                                }).then((result) => {
-                                    if (result.value) {
-                                        Swal.fire(
-                                            'Deleted!',
-                                            'Your file has been deleted.',
-                                            'success'
-                                        ).then(() => {
-                                            deletePost(value.postid);
-                                        })
+                        <div className='w-full flex justify-center items-end mt-3'>
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    Swal.fire({
+                                        title: 'Are you sure?',
+                                        text: "You won't be able to revert this!",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Yes, delete it!'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            Swal.fire(
+                                                'Deleted!',
+                                                'Your file has been deleted.',
+                                                'success'
+                                            ).then(() => {
+                                                deletePost(value.postid);
+                                            })
+                                        }
                                     }
-                                }
-                                )
-                            }}
-                            className="text-white mx-auto hover:bg-red-800 py-2 px-4 bg-red-700 rounded "
-                        >
-                            Delete your Request
-                        </button>
-                    </div>
+                                    )
+                                }}
+                                className="text-white mx-auto hover:bg-red-800 py-2 px-4 bg-red-700 rounded "
+                            >
+                                Delete your Request
+                            </button>
+                        </div>
 
-                </div>
-            )
+                    </div>
+                )
+                :
+                render.push(
+                    <div className="w-96 h-96 mr-5 max-w-xs overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                        <img className="h-1/3 w-full" src={value.image} />
+                        <div className='flex flex-row justify-evenly pt-10 h-1/3'>
+                            <h1 className='font-bold'> Title </h1>
+                            <div className="divider divider-vertical"></div>
+                            <h1 className='w-1/2 text-left'>{value.title} </h1>
+                        </div>
+
+                        <div className='flex flex-row justify-evenly pt-10'>
+                            <h1 className='font-bold pr-10'> Status </h1>
+                            <h1 className='w-1/2 text-left'>{value.state}</h1>
+                        </div>
+
+                        <div className='w-full flex justify-between items-end mt-3'>
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    Swal.fire({
+                                        title: 'Are you sure?',
+                                        text: "You won't be able to revert this, if it is not done!",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Yes, it is done!'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            Swal.fire(
+                                                'Done!',
+                                                'Congrats!.',
+                                                'success'
+                                            ).then(() => {
+                                                reducePoints(value.acceptedID);
+                                                deletePost(value.postid);
+                                            })
+                                        }
+                                    }
+                                    )
+                                }}
+                                className="text-white mx-auto hover:bg-red-800 py-2 px-4 bg-red-700 rounded "
+                            >
+                                Abandoned
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    Swal.fire({
+                                        title: 'Are you sure?',
+                                        text: "You won't be able to revert this, if it is not done!",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Yes, it is done!'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            Swal.fire(
+                                                'Done!',
+                                                'Congrats!.',
+                                                'success'
+                                            ).then(() => {
+                                                addPoints(value.acceptedID);
+                                                deletePost(value.postid);
+                                            })
+                                        }
+                                    }
+                                    )
+                                }}
+                                className="text-white mx-auto hover:bg-greenish5 py-2 px-4 bg-greenish7 rounded "
+                            >
+                                Finished
+                            </button>
+                        </div>
+
+                    </div>
+                )
         })
         return render;
     }
@@ -309,6 +462,25 @@ export default function Dashboard(props) {
                         </div>
                     </div>
                 </div>
+                <h1 className='text-center font-bold w-full mt-10 '>The Jobs you accepted</h1>
+                <div className="overflow-x-auto container mx-auto mt-10 w-full lg:w-1/2 mb-20">
+                    <table className="table w-full">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Job</th>
+                                <th>Name</th>
+                                <th>Time</th>
+                                <th>Location</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {getJob()}
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
 
         </>

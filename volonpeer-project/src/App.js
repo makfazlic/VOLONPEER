@@ -18,6 +18,8 @@ import NewPosts from './components/NewPosts';
 import Posts from './components/Posts';
 import Dashboard from './components/Dashboard';
 import SinglePost from './components/SinglePost'
+import Privacy from './components/Privacy'
+import Leaderboard from './components/Leaderboard'
 
 import logo1 from './images/logo1.png';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -63,12 +65,13 @@ function App() {
 
         <Route path="/privacy-policy">
           <Header location="privacy-policy" user={currentUser} />
-          privacy policy
+          <Privacy />
+          <Footer />
         </Route>
 
         <Route path="/leaderboard">
           <Header location="leaderboard" user={currentUser} />
-          leaderboard
+          <Leaderboard />
         </Route>
         <Route exact path="/posts/:id/:pid" component={SinglePost}>
           <Header location="postsid" user={currentUser} />
