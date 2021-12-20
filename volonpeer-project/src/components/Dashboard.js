@@ -20,6 +20,7 @@ export default function Dashboard(props) {
     const [userItemsFromDatabase, setuserItemsFromDatabase] = useState([]);
     const [userIdFromDatabase, setuserIdFromDatabase] = useState("");
     const [jobFromDatabase, setJobFromDatabase] = useState([]);
+    const [isEmpty, setisEmpty] = useState(false);
 
 
 
@@ -32,6 +33,7 @@ export default function Dashboard(props) {
 
 
         onAuthStateChanged(auth, (user) => {
+
             const dbRef = ref(db, 'posts');
             const items = [];
             const userItems = []
@@ -386,7 +388,7 @@ export default function Dashboard(props) {
 
                 <img className='h-96 w-full object-fill' src={cover} alt='' />
                 <div className="md:flex flex-col lg:flex-row justify-evenly mt-5" >
-
+                
                     <div className="card compact side bg-base-100">
                         <div className="flex-row items-center space-x-4 card-body">
                             <div>
