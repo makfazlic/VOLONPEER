@@ -224,7 +224,7 @@ export default function Posts() {
 
                 (postArray[i][10] === 5) ? <></> : <div className="relative w-80 md:w-full  mx-auto flex flex-col items-center hover:opacity-100 bg-gray-200 opacity-80 mb-10 rounded-xl">
                     <div className="h-60 flex">
-                        <img src={postArray[i][6]} className='rounded-t-xl object-fill' alt="post" />
+                        <img src={postArray[i][6]} className='rounded-t-xl object-cover' alt="post" />
                     </div>
                     <div className="flex-1 rounded-b-xl text-left bg-gray-200 w-full mx-10">
                         <h1 className="px-5 text-xl font-bold mt-5 text-center">{postArray[i][3]}</h1>

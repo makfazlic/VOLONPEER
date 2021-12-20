@@ -183,10 +183,10 @@ export default function Dashboard(props) {
 
                     <div className='flex flex-row justify-evenly pt-10'>
                         <h1 className='font-bold pr-10'> Status </h1>
-                        <h1 className='w-1/2 text-left'>Null</h1>
+                        <h1 className='w-1/2 text-left'>{value.state}</h1>
                     </div>
 
-                    <div className='justify-end'>
+                    <div className='w-full flex justify-center items-end mt-3'>
                         <button
                             onClick={(e) => {
                                 e.preventDefault();
@@ -211,7 +211,7 @@ export default function Dashboard(props) {
                                 }
                                 )
                             }}
-                            className="text-white hover:bg-red-600 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-center text-sm font-medium rounded-md bg-red-500 hover:bg-red mx-auto focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blueish5 mt-2"
+                            className="text-white mx-auto hover:bg-red-800 py-2 px-4 bg-red-700 rounded "
                         >
                             Delete your Request
                         </button>

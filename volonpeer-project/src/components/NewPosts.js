@@ -4,6 +4,7 @@ import { useAuth, database, storage } from '../firebase'
 import { ref as storageRef, uploadBytes } from 'firebase/storage'
 import { BadgeCheckIcon } from '@heroicons/react/outline';
 
+
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -117,7 +118,10 @@ export default function NewPosts() {
         four: "",
         five: "",
 
-      }
+      },
+      state: "Not Accepted",
+      acceptedID: "",
+      email: currentUser.email,
 
     }
     set(pushSet, upload);
@@ -159,7 +163,7 @@ export default function NewPosts() {
                       className="mt-1 focus:ring-blueish5 focus:border-blueish5 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                     <p className="mt-2 text-sm text-gray-500">
-                      This is going to be displayed on yout post.
+                      This is going to be displayed on your post.
                     </p>
                   </div>
 
